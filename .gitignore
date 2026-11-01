@@ -1,0 +1,47 @@
+# Dependencies and generated builds
+node_modules/
+out/
+dist/
+release/
+coverage/
+*.tsbuildinfo
+
+# Local research data and validation artifacts
+test-results/
+deliverables/
+vibe_images/
+.reference/
+*.rpbackup
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+
+# Machine-local agent, editor, deployment and SSH state
+.claude/
+.qoder/
+.idea/
+.vscode/
+gpu-unlock-deployment-*/
+gpu-unlock-server-known-hosts
+*known_hosts*
+*known-hosts*
+
+# Credentials and logs
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+credentials*.json
+secrets*.json
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

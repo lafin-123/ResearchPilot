@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "crossref-search",
+  "status": "draft",
+  "inputRequirement": "题名、作者或DOI线索",
+  "expectedOutput": "候选文献与检索记录",
+  "limitation": "Crossref覆盖不完整且不提供全文结论",
+  "decisions": [
+    {
+      "step": "保留原始查询",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "比较题名作者年份与DOI",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "列出多义候选和未找到项",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

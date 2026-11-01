@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "related-work",
+  "status": "draft",
+  "inputRequirement": "核验文献与主张矩阵",
+  "expectedOutput": "主题化相关工作章节",
+  "limitation": "不能虚构最早首次唯一性",
+  "decisions": [
+    {
+      "step": "按问题方法证据分组",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "比较条件而非只列指标",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "明确本研究与最近来源关系",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

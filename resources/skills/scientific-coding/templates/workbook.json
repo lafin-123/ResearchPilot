@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "scientific-coding",
+  "status": "draft",
+  "inputRequirement": "明确方法和输入输出契约",
+  "expectedOutput": "可审阅代码与最小测试",
+  "limitation": "加载技能不是执行代码许可",
+  "decisions": [
+    {
+      "step": "先实现最小可证伪版本",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "对边界和失败路径写测试",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录依赖与确定性来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

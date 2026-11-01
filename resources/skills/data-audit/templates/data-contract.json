@@ -1,0 +1,13 @@
+{
+  "dataset": "TODO: project-relative input path",
+  "sha256": "TODO",
+  "sourceAndPermission": "TODO",
+  "rowMeaning": "TODO",
+  "independentSamplingUnit": "TODO",
+  "idColumn": "subject_id",
+  "splitColumn": "split",
+  "numericColumns": {"outcome": "TODO: unit and allowable range"},
+  "missingnessPolicy": "TODO: prespecified policy, no silent dropping",
+  "privacyReview": "TODO",
+  "exclusions": []
+}

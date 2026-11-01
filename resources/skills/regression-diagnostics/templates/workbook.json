@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "regression-diagnostics",
+  "status": "draft",
+  "inputRequirement": "模型规格与真实诊断输出",
+  "expectedOutput": "假设偏离及修复建议",
+  "limitation": "不能仅凭R平方判断模型有效",
+  "decisions": [
+    {
+      "step": "核对函数形式和残差",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查杠杆共线异方差",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录稳健方案及其局限",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

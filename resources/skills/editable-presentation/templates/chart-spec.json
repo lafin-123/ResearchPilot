@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "kind": "chart",
+  "chartType": "bar",
+  "title": "Demonstration only: replace with measured values",
+  "provenance": {"sourceLabel":"Demonstration template, not experimental evidence","isDemo":true},
+  "xLabel": "Condition",
+  "yLabel": "Measured response (units)",
+  "labels": ["Baseline", "Proposed"],
+  "series": [{"name":"Demonstration response","values":[1,2]}]
+}

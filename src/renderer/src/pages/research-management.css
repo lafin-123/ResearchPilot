@@ -1,0 +1,106 @@
+/* Research records: quiet chrome, readable content, results before authoring. */
+.research-management { --research-paper: #f7f7f6; --research-rule: #e5e5e3; --research-ink: #252525; --research-muted: #686868; color: var(--research-ink); font-size: 14px; }
+.research-management .page-head { margin-bottom: 22px; align-items: flex-start; }
+.research-management .page-subtitle { font-size: 14px; line-height: 1.7; max-width: 70ch; }
+.research-management :is(.btn, .input, .select, .textarea, .small, .field-label, .field-hint) { font-size: 13px; }
+.research-management :is(.tiny, .badge) { font-size: 12px; }
+.research-management .btn { min-height: 34px; }
+.research-management .btn-sm { min-height: 30px; }
+.research-management .muted { color: var(--research-muted); }
+.research-management :is(button, summary, input, textarea, select):focus-visible { outline: 2px solid #666; outline-offset: 3px; }
+.research-management .research-menu { position: relative; }
+.research-management .research-menu > summary { list-style: none; cursor: pointer; }
+.research-management .research-menu > summary::-webkit-details-marker { display: none; }
+.research-management .research-menu-items { position: absolute; right: 0; top: calc(100% + 6px); z-index: 15; min-width: 210px; padding: 6px; border: 1px solid var(--research-rule); border-radius: 7px; background: #fff; box-shadow: 0 6px 18px #0000000a; }
+.research-management .research-menu-items .btn { width: 100%; justify-content: flex-start; background: transparent; border-color: transparent; }
+.research-management .research-menu-items .btn:hover { background: var(--research-paper); }
+.research-management .research-toolbar { gap: 14px; padding-bottom: 16px; margin: 0; border-bottom: 1px solid var(--research-rule); }
+.research-management .research-toolbar .search-box { max-width: 560px; }
+.research-management .research-toolbar > .btn:last-child { margin-left: auto; }
+.research-management .research-disclosure { border-top: 1px solid var(--research-rule); }
+.research-management .research-disclosure > summary { cursor: pointer; padding: 14px 0; font-size: 13px; color: var(--research-muted); }
+.research-management .research-disclosure-body { display: grid; gap: 12px; padding-bottom: 14px; }
+.research-management .research-provenance { margin: 16px 0; font-size: 13px; line-height: 1.65; }
+.research-management .research-provenance > div { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; padding: 5px 0; }
+.research-management .research-provenance dt { color: var(--research-muted); }
+.research-management .research-provenance dd { margin: 0; overflow-wrap: anywhere; }
+.research-management .empty { padding: 48px 24px; }
+.research-management .empty-text { font-size: 14px; max-width: 48ch; line-height: 1.8; }
+.research-management .reference-layout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.research-management .reference-layout.has-selection { grid-template-columns: minmax(0, 1fr) minmax(340px, .88fr); }
+.research-management .reference-list { min-width: 0; }
+.research-management .reference-row { display: flex; flex-direction: row; gap: 20px; width: 100%; padding: 18px 16px; text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--research-rule); border-radius: 0; color: inherit; cursor: pointer; font: inherit; }
+.research-management .reference-row:hover, .research-management .reference-row.active { background: var(--research-paper); }
+.research-management .reference-row.active { box-shadow: inset 3px 0 var(--research-ink); }
+.research-management .reference-row-main { flex: 1; min-width: 0; }
+.research-management .ref-title { margin: 0 0 6px; font-size: 14px; line-height: 1.6; font-weight: 600; }
+.research-management .ref-meta, .research-management .reference-doi { font-size: 13px; line-height: 1.65; color: var(--research-muted); overflow-wrap: anywhere; }
+.research-management .reference-tags { margin-left: 14px; color: #555; }
+.research-management .reference-note-preview { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 7px 0 0; font-size: 13px; color: #555; }
+.research-management .reference-row-end { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 8px; padding-top: 3px; color: var(--research-muted); font-size: 12px; }
+.research-management .reference-reader { min-width: 0; padding: 18px 0 0 24px; margin-left: 10px; border-left: 1px solid var(--research-rule); }
+.research-management .reference-reader h2 { font-size: 18px; line-height: 1.6; margin: 10px 0; font-weight: 600; }
+.research-management .reference-citation { color: var(--research-muted); line-height: 1.8; font-size: 13px; }
+.research-management .reference-abstract { margin: 24px 0; }
+.research-management :is(.reference-abstract, .research-run-section) h3 { font-size: 14px; font-weight: 600; margin: 0 0 12px; }
+.research-management .reference-abstract p { font-size: 14px; line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; }
+.research-management .reference-reading { margin: 22px 0; padding: 18px 0; border-top: 1px solid var(--research-rule); border-bottom: 1px solid var(--research-rule); }
+.research-management .reference-reading h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.research-management .reference-reading p { line-height: 1.75; overflow-wrap: anywhere; }
+.research-management .reference-reading-draft { margin-top: 16px; padding: 14px; background: var(--research-paper); }
+.research-management .reference-reading-draft :is(code, summary) { overflow-wrap: anywhere; }
+.research-management .reference-reading-content { font: inherit; font-size: 14px; line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 480px; overflow: auto; user-select: text; }
+.research-management .reference-reader textarea { min-height: 150px; line-height: 1.8; }
+.research-management .reference-save { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-top: 1px solid var(--research-rule); }
+.research-management .reference-bibtex { font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--research-paper); padding: 12px; }
+.research-management .experiment-layout { grid-template-columns: 230px minmax(0, 1fr); gap: 24px; }
+.research-management .exp-list { background: transparent; border: 0; border-right: 1px solid var(--research-rule); padding: 0 16px 0 0; border-radius: 0; }
+.research-management .research-list-heading { display: flex; justify-content: space-between; padding: 0 10px 12px; font-size: 13px; color: var(--research-muted); }
+.research-management .exp-item { border-radius: 5px; padding: 13px 10px; border: 0; border-bottom: 1px solid var(--research-rule); }
+.research-management .exp-item.active { background: #eeeeec; color: var(--research-ink); }
+.research-management .exp-name { font-size: 14px; line-height: 1.6; }
+.research-management .exp-meta { font-size: 12px; line-height: 1.6; }
+.research-management .exp-workspace { min-width: 0; gap: 18px; }
+.research-management .exp-head { flex-wrap: wrap; gap: 12px; }
+.research-management .exp-head > .row { flex-wrap: wrap; }
+.research-management .exp-title { font-size: 19px; }
+.research-management .exp-sub { font-size: 13px; line-height: 1.7; max-width: 70ch; }
+.research-management .exp-tabs { border-bottom: 1px solid var(--research-rule); }
+.research-management .exp-tab { font-size: 13px; padding: 11px 14px; color: var(--research-muted); }
+.research-management .exp-tab.active { color: var(--research-ink); border-bottom-color: var(--research-ink); }
+.research-management .exp-tab:last-child { margin-left: auto; }
+.research-management .research-running-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 9px 12px; background: var(--research-paper); font-size: 13px; }
+.research-management .research-run-results { gap: 24px; }
+.research-management .research-metrics-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.research-management .research-metrics-table :is(th, td) { padding: 9px 12px; border-bottom: 1px solid var(--research-rule); font-weight: 400; overflow-wrap: anywhere; }
+.research-management .research-metrics-table thead { background: var(--research-paper); color: var(--research-muted); }
+.research-management .research-metrics-table td { font-variant-numeric: tabular-nums; }
+.research-management .terminal { min-height: 180px; max-height: 420px; font-size: 13px; line-height: 1.75; padding: 16px; background: #f7f7f6; color: #333; border: 1px solid var(--research-rule); border-radius: 5px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.research-management .research-code-toolbar { padding: 4px 0; }
+.research-management .research-environment { padding: 12px; background: var(--research-paper); }
+.research-management .research-environment .select { width: auto; max-width: 250px; }
+.research-management .code-surface { font-size: 13px; }
+.research-management .run-row { width: 100%; text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--research-rule); color: inherit; font: inherit; }
+.research-management .list-title { font-size: 14px; }
+.research-management .list-sub { font-size: 13px; }
+.research-management.figure-page { --figure-ink: #252525; --figure-muted: #686868; --figure-border: #e5e5e3; --figure-plane: #f7f7f6; }
+.research-management .figure-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+.research-management .figure-card { overflow: visible; border: 1px solid var(--research-rule); border-radius: 7px; box-shadow: none; }
+.research-management .figure-preview-button { display: block; width: 100%; padding: 0; border: 0; background: white; border-radius: 7px 7px 0 0; overflow: hidden; cursor: pointer; }
+.research-management .figure-experiment-source { display: block; margin-top: 4px; }
+.research-figure-preview { font-size: 14px; line-height: 1.8; color: #555; overflow-wrap: anywhere; }
+.research-figure-preview .figure-img { width: 100%; height: auto; max-height: 60vh; object-fit: contain; background: #fff; }
+.modal:has(.figure-studio-layout) :is(.figure-help, .figure-preview-tip, .figure-save-note, .figure-validation span) { color: #686868; font-size: 13px; }
+.modal:has(.figure-studio-layout) :is(.figure-preview-panel, .figure-node) { background: #f7f7f6; border-color: #e5e5e3; }
+.modal:has(.figure-studio-layout) :is(.figure-preview-panel strong, .figure-data-table) { color: #252525; }
+.modal:has(.figure-studio-layout) :is(.input, .select, .textarea, .btn, .field-label, .field-hint, .figure-provenance-row) { font-size: 13px; }
+.research-management .figure-card .figure-img { width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: contain; border-bottom: 1px solid var(--research-rule); }
+.research-management .figure-card .figure-info { padding: 16px; }
+.research-management .figure-info .card-title { font-size: 15px; line-height: 1.6; }
+.research-management .figure-source { font-size: 13px; }
+.research-management .figure-format { font-size: 12px; color: var(--research-muted); }
+.research-management .figure-card-actions { gap: 8px; margin-top: 14px; }
+.research-management .figure-card-actions .research-menu { margin-left: auto; }
+.research-management .figure-gallery-heading { display: flex; align-items: center; justify-content: space-between; margin: 0 0 18px; font-size: 13px; color: var(--research-muted); }
+@media (max-width: 1080px) { .research-management .reference-layout.has-selection { grid-template-columns: minmax(0, 1fr); } .research-management .reference-reader { border-left: 0; border-top: 1px solid var(--research-rule); margin: 18px 0 0; padding: 18px 0 0; } .research-management .experiment-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 18px; } }
+@media (max-width: 760px) { .research-management .page-head { flex-direction: column; gap: 14px; } .research-management .page-actions { flex-wrap: wrap; } .research-management .research-toolbar { flex-wrap: wrap; } .research-management .research-toolbar .search-box { flex-basis: 100%; max-width: none; } .research-management .experiment-layout { grid-template-columns: minmax(0, 1fr); } .research-management .exp-list { border-right: 0; padding: 0; max-height: 240px; overflow: auto; } .research-management .figure-grid { grid-template-columns: minmax(0, 1fr); } .research-management .reference-row { padding: 16px 8px; gap: 12px; } .research-management .exp-tab { padding: 11px 9px; } }

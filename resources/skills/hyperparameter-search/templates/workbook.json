@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "hyperparameter-search",
+  "status": "draft",
+  "inputRequirement": "模型搜索空间和预算",
+  "expectedOutput": "搜索及验证协议",
+  "limitation": "禁止窥探最终测试集",
+  "decisions": [
+    {
+      "step": "预定空间和预算",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分内层验证与外层测试",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留全部尝试和选择规则",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

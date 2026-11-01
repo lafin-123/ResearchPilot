@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "fulltext-table-check",
+  "status": "draft",
+  "inputRequirement": "论文正文图表及图注",
+  "expectedOutput": "图表正文一致性报告",
+  "limitation": "没有原表图不能估读精确数值",
+  "decisions": [
+    {
+      "step": "匹配图表编号与引用",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "对照单位样本量和区间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录标签图注及正文差异",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

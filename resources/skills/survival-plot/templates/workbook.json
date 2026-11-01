@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "survival-plot",
+  "status": "draft",
+  "inputRequirement": "实际生存估计及风险集",
+  "expectedOutput": "曲线图及风险表方案",
+  "limitation": "无删失信息不伪造KaplanMeier曲线",
+  "decisions": [
+    {
+      "step": "定义事件删失起点",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "显示风险人数与区间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "注明时间单位和比较限制",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

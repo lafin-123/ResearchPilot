@@ -1,0 +1,13 @@
+{
+  "funderAndCall": "TODO: exact supplied call/version/date",
+  "compliance": [{"requirement":"TODO","sourceLocator":"TODO","section":"TODO","status":"unverified"}],
+  "significance": "TODO",
+  "evidenceGap": "TODO",
+  "centralHypothesis": "TODO",
+  "aims": [{"question":"TODO","method":"TODO","feasibilityEvidence":[],"milestone":"TODO","goNoGo":"TODO","alternative":"TODO","owner":"TODO"}],
+  "preliminaryData": [],
+  "budget": [{"item":"TODO","quantity":null,"unitCost":null,"quoteSource":"TODO","assumption":"TODO"}],
+  "ethicsAndPermissions": "TODO: do not claim granted",
+  "missingMaterials": [],
+  "submissionAuthorized": false
+}

@@ -1,0 +1,148 @@
+import assert from 'node:assert/strict'
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { join, resolve } from 'node:path'
+import { _electron as electron } from 'playwright-core'
+
+const require = createRequire(import.meta.url)
+const root = resolve(import.meta.dirname, '..')
+await mkdir(join(root, 'test-results'), { recursive: true })
+const runDir = await mkdtemp(join(root, 'test-results', 'skills-'))
+const env = { ...process.env, RESEARCHPILOT_USER_DATA: join(runDir, 'profile'), RESEARCHPILOT_WORKSPACE_ROOT: join(runDir, 'workspace') }
+delete env.ELECTRON_RUN_AS_NODE
+let app, page
+const checks = [], errors = []
+const record = name => { checks.push(name); console.log(`PASS ${name}`) }
+async function launch() {
+  app = await electron.launch({ executablePath: require('electron'), args: [root], cwd: root, env, timeout: 60000 })
+  page = await app.firstWindow()
+  page.on('pageerror', e => errors.push(e.message))
+  await page.waitForSelector('.research-home', { timeout: 60000 })
+}
+async function skills() {
+  await page.locator('.sidebar a[href="#/skills"]').click()
+  await page.waitForFunction(() => document.querySelectorAll('.skill-row').length >= 100)
+}
+try {
+  await launch()
+  const initial = await page.evaluate(() => window.researchpilot.bootstrap())
+  assert.equal(initial.settings.researchClarification, 'balanced')
+  const projectId = initial.activeProjectId
+  await skills()
+  const listed = await page.evaluate(id => window.researchpilot.skills.list(id), projectId)
+  assert.equal(listed.filter(s => s.scope === 'builtin').length, 106)
+  assert.equal(await page.locator('.skill-row').count(), 106)
+  await page.screenshot({ path: join(runDir, '01-library.png'), fullPage: true })
+  record('Actual application discovers 106 bundled skills and category navigation')
+  await page.getByRole('button', { name: /文献与全文核对/ }).click()
+  await page.getByLabel('搜索科研技能').fill('全文')
+  await page.waitForFunction(() => document.querySelectorAll('.skill-row').length >= 4 && document.querySelectorAll('.skill-row').length < 15)
+  await page.locator('.skill-row').filter({ hasText: '全文主张核对' }).getByRole('button', { name: '查看', exact: true }).click()
+  await page.locator('.skill-preview').filter({ hasText: '缺失全文或页码不可伪造支持关系' }).waitFor()
+  await page.getByRole('button', { name: '关闭', exact: true }).last().click()
+  record('Full-text checks have dedicated entries and honest coverage requirements')
+  await page.getByLabel('搜索科研技能').fill('')
+  await page.getByRole('button', { name: /目标期刊与投稿/ }).click()
+  await page.getByLabel('搜索科研技能').fill('journal-revision')
+  const row = page.locator('.skill-row').filter({ hasText: '按目标期刊修改' })
+  await row.getByRole('button', { name: '准备任务', exact: true }).click()
+  assert.equal(await page.getByLabel('目标（可选）', { exact: true }).inputValue(), '')
+  assert.equal(await page.getByLabel('输入说明（可选）', { exact: true }).inputValue(), '')
+  await page.getByLabel('本次问询方式').selectOption('minimal')
+  await page.getByRole('button', { name: '放入助手草稿', exact: true }).click()
+  await page.locator('.composer-box textarea').waitFor()
+  const draft = await page.locator('.composer-box textarea').inputValue()
+  assert.match(draft, /journal-revision/)
+  assert.match(draft, /少打断/)
+  assert.match(draft, /未填写（可选）/)
+  assert.match(draft, /审批/)
+  assert.notEqual((await page.evaluate(() => window.researchpilot.chat.state())).status, 'running')
+  record('Empty optional fields prepare a journal revision draft with per-task mode and never send')
+  await page.locator('.sidebar a[href="#/skills"]').click()
+  await page.getByLabel('搜索科研技能').fill('forest-plot')
+  await page.locator('.skill-row').getByRole('button', { name: '准备任务', exact: true }).click()
+  let handled = false
+  page.once('dialog', async dialog => { handled = true; await dialog.dismiss() })
+  await page.getByRole('button', { name: '放入助手草稿', exact: true }).click()
+  assert.ok(handled)
+  await page.getByRole('button', { name: '取消', exact: true }).click()
+  await page.locator('.sidebar a[href="#/agent"]').click()
+  assert.equal(await page.locator('.composer-box textarea').inputValue(), draft)
+  record('Existing composer draft survives declined replacement')
+  await page.evaluate(async id => {
+    await window.researchpilot.skills.create({ projectId: id, scope: 'project', name: 'custom-lab-method', description: '自定义实验室方法', whenToUse: '本地自定义流程', body: '# Custom fixture\nDo not execute anything.' })
+    await window.researchpilot.skills.copyBuiltin(id, 'journal-revision', 'project')
+  }, projectId)
+  await page.locator('.sidebar a[href="#/skills"]').click()
+  await page.getByRole('button', { name: /自定义技能/ }).click()
+  await page.waitForFunction(() => document.querySelectorAll('.skill-row').length === 1)
+  assert.match(await page.locator('.skill-row').textContent(), /custom-lab-method/)
+  await page.getByRole('button', { name: /全部技能/ }).click()
+  await page.getByLabel('搜索科研技能').fill('journal-revision')
+  assert.equal(await page.locator('.skill-row').count(), 1)
+  assert.match(await page.locator('.skill-row').textContent(), /项目/)
+  record('Custom category and project-over-builtin precedence remain usable')
+  const roleProviders = await page.evaluate(async () => {
+    const api = window.researchpilot
+    return Promise.all(['writing','figures','engineering'].map(role => api.providers.upsert({ name: `Role ${role}`, kind: 'custom', protocol: 'openai-completions', baseUrl: `https://${role}.example.invalid/v1`, apiKey: `synthetic-${role}-not-real`, models: [{ id: `${role}-model`, label: `${role} model` }] })))
+  })
+  await page.reload()
+  await page.waitForSelector('.sidebar')
+  await page.locator('.sidebar a[href="#/settings"]').click()
+  await page.getByLabel('科研问询方式', { exact: true }).selectOption('guided')
+  for (const [index, label] of ['写作 Agent','绘图 Agent','工程与实验 Agent'].entries()) {
+    const provider = roleProviders[index]
+    await page.getByLabel(label, { exact: true }).selectOption(JSON.stringify([provider.id, provider.models[0].id]))
+  }
+  await page.getByRole('button', { name: '保存生成参数', exact: true }).click()
+  await page.waitForFunction(async () => (await window.researchpilot.settings.get()).researchClarification === 'guided')
+  await app.close(); app = null
+  await launch()
+  assert.equal((await page.evaluate(() => window.researchpilot.settings.get())).researchClarification, 'guided')
+  await page.locator('.sidebar a[href="#/settings"]').click()
+  assert.equal(await page.getByLabel('科研问询方式', { exact: true }).inputValue(), 'guided')
+  await page.screenshot({ path: join(runDir, '02-interaction-settings.png'), fullPage: true })
+  record('Clarification and three independently configured role providers save through UI and survive restart')
+  const restoredRoles = await page.evaluate(() => window.researchpilot.settings.get())
+  assert.equal(restoredRoles.agentRoleModels.figures.providerId, roleProviders[1].id)
+  await skills()
+  await page.getByLabel('搜索科研技能').fill('forest-plot')
+  await page.locator('.skill-row').getByRole('button', { name: '准备任务', exact: true }).click()
+  await page.getByRole('button', { name: '放入助手草稿', exact: true }).click()
+  await page.locator('.composer-box textarea').waitFor()
+  assert.match(await page.locator('.composer-box textarea').inputValue(), /绘图 Agent/)
+  const activeModel = await page.getByLabel('当前研究模型').inputValue()
+  assert.equal(activeModel, `${roleProviders[1].id}::figures-model`)
+  assert.notEqual((await page.evaluate(() => window.researchpilot.chat.state())).status, 'running')
+  record('Figure skill prepares an independent role chat with configured API/model and no paid call')
+  await skills()
+  await page.getByLabel('搜索科研技能').fill('')
+  await page.getByRole('button', { name: /科研绘图与演示/ }).click()
+  await page.screenshot({ path: join(runDir, '03-figure-methods.png'), fullPage: true })
+  await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(960, 720))
+  await page.screenshot({ path: join(runDir, '04-narrow.png'), fullPage: true })
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false)
+  assert.deepEqual(errors, [])
+  record('Desktop and 960px layouts remain readable with no document overflow or renderer errors')
+  const { annotationFixturePdf } = await import('./pdf-fixture.mjs')
+  const pdfPath = join(runDir, 'linked-fulltext.pdf')
+  await writeFile(pdfPath, annotationFixturePdf())
+  const ref = await page.evaluate(id => window.researchpilot.references.upsert({ projectId: id, title: 'Fulltext desktop fixture', abstract: 'Abstract is not the full text.' }), projectId)
+  await app.evaluate(({ dialog }, path) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] }) }, pdfPath)
+  await page.evaluate(({ projectId, id }) => window.researchpilot.references.attachPdf(projectId, id), { projectId, id: ref.id })
+  await page.locator('.sidebar a[href="#/library"]').click()
+  await page.getByText('Fulltext desktop fixture', { exact: true }).click()
+  await page.getByRole('button', { name: '提取全文页', exact: true }).click()
+  await page.getByRole('heading', { name: /PDF 第 1 页/ }).waitFor()
+  await page.getByText('A reproducible experiment preserves its evidence.', { exact: false }).waitFor()
+  await page.locator('.modal').evaluate(async element => { await Promise.all(element.getAnimations({ subtree: true }).filter(animation => animation.effect?.getComputedTiming().iterations !== Infinity).map(animation => animation.finished.catch(() => {}))) })
+  await page.screenshot({ path: join(runDir, '05-fulltext-pages.png'), fullPage: true })
+  record('Built Electron application extracts linked PDF fulltext locally with actual page numbers')
+  assert.deepEqual(errors, [])
+  await writeFile(join(runDir, 'report.json'), JSON.stringify({ status: 'passed', checks, errors, createdAt: new Date().toISOString() }, null, 2))
+  console.log(`REPORT ${runDir}`)
+} catch (error) {
+  if (page && !page.isClosed()) await page.screenshot({ path: join(runDir, 'failure.png'), fullPage: true }).catch(() => {})
+  await writeFile(join(runDir, 'report.json'), JSON.stringify({ status: 'failed', checks, errors, error: String(error.stack ?? error) }, null, 2))
+  console.error(runDir, error); process.exitCode = 1
+} finally { if (app) await app.close().catch(() => {}) }

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "submission-checklist",
+  "status": "draft",
+  "inputRequirement": "稿件材料和实际投稿要求",
+  "expectedOutput": "可提交项及阻塞清单",
+  "limitation": "不登录账号或自动投稿",
+  "decisions": [
+    {
+      "step": "核对正文图表补充附件",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "逐项验证伦理利益冲突声明",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "把缺失签署列为人工步骤",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

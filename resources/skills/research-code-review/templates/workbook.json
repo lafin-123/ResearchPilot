@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "research-code-review",
+  "status": "draft",
+  "inputRequirement": "源代码协议与真实运行",
+  "expectedOutput": "定位缺陷和影响范围",
+  "limitation": "静态审阅不能证明数值正确",
+  "decisions": [
+    {
+      "step": "追踪数据划分及指标公式",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对单位随机性和状态",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "用最小反例验证重要缺陷",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "randomization",
+  "status": "draft",
+  "inputRequirement": "分配单位干预组和实施限制",
+  "expectedOutput": "随机方案及隐藏分配检查",
+  "limitation": "随机抽样不等于随机分组",
+  "decisions": [
+    {
+      "step": "选择分层区组或整群单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "说明分配隐藏责任",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "预留实际分配日志并防泄漏",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "noninferiority",
+  "status": "draft",
+  "inputRequirement": "界值依据效应方向和设计",
+  "expectedOutput": "界值论证及推断框架",
+  "limitation": "不显著不代表等效或非劣",
+  "decisions": [
+    {
+      "step": "独立论证临床实际界值",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "明确单侧双侧区间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分意向分析与符合方案敏感性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

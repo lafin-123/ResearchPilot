@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "limitations-writing",
+  "status": "draft",
+  "inputRequirement": "设计与证据缺口",
+  "expectedOutput": "具体局限及结论影响",
+  "limitation": "空泛未来研究不能代替缺陷披露",
+  "decisions": [
+    {
+      "step": "区分内部外部构念统计效度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "描述偏倚可能方向",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "说明可缓解与不可修复部分",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

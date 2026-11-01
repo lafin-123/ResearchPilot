@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "longitudinal-analysis",
+  "status": "draft",
+  "inputRequirement": "主体时间点及缺失结构",
+  "expectedOutput": "纵向模型与估计目标方案",
+  "limitation": "重复观测不能当独立样本",
+  "decisions": [
+    {
+      "step": "确定主体内相关与时间尺度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分总体和个体效应",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划时间交互缺失及模型诊断",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

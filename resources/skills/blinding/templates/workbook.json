@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "blinding",
+  "status": "draft",
+  "inputRequirement": "角色测量流程及干预特征",
+  "expectedOutput": "可实施盲法与例外表",
+  "limitation": "不可实施盲法需披露不能虚构",
+  "decisions": [
+    {
+      "step": "区分参与者评估者分析者",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "评估揭盲路径",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划记录偏离和客观结局",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "data-management",
+  "status": "draft",
+  "inputRequirement": "数据来源生命周期与约束",
+  "expectedOutput": "DMP及责任访问表",
+  "limitation": "不自动上传或承诺合规",
+  "decisions": [
+    {
+      "step": "盘点数据级别和所有者",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划存储版本保留销毁",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "登记共享许可和访问审批",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

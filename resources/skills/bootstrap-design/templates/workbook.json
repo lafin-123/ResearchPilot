@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "bootstrap-design",
+  "status": "draft",
+  "inputRequirement": "独立单位配对和统计量",
+  "expectedOutput": "重采样协议与区间选择",
+  "limitation": "整群重复观测不能逐行重采样",
+  "decisions": [
+    {
+      "step": "确定应重采样的独立单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保持配对分层及时间结构",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录重复次数种子及失败样本",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

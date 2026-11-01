@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "multi-panel-figure",
+  "status": "draft",
+  "inputRequirement": "关联图稿及版面要求",
+  "expectedOutput": "面板顺序与统一标注规范",
+  "limitation": "不把不同尺度伪装成可直接比较",
+  "decisions": [
+    {
+      "step": "设计从问题到证据顺序",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "统一字体编号单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查共享图例和裁切",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "reproduction-plan",
+  "status": "draft",
+  "inputRequirement": "论文代码数据许可和预算",
+  "expectedOutput": "复现步骤及差异台账",
+  "limitation": "未运行只称计划不称复现成功",
+  "decisions": [
+    {
+      "step": "选择应复现核心结果",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "固定环境与输入",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "对照容差并记录缺失依赖",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

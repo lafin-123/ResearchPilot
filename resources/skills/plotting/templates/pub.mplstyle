@@ -1,0 +1,17 @@
+figure.dpi: 300
+savefig.dpi: 300
+savefig.bbox: tight
+savefig.facecolor: white
+font.family: DejaVu Sans
+font.size: 9
+axes.titlesize: 10
+axes.labelsize: 9
+xtick.labelsize: 8
+ytick.labelsize: 8
+legend.fontsize: 8
+axes.spines.top: false
+axes.spines.right: false
+axes.grid: true
+grid.alpha: 0.18
+grid.linewidth: 0.5
+lines.linewidth: 1.4

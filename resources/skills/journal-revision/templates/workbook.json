@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "journal-revision",
+  "status": "draft",
+  "inputRequirement": "完整稿件与已核验作者指南",
+  "expectedOutput": "逐条修改映射及修订草稿",
+  "limitation": "未提供指南不编造目标期刊规则",
+  "decisions": [
+    {
+      "step": "将要求映射稿件位置",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分格式修改和科学内容",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留主张数值并列未完成项",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

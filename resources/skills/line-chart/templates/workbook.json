@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "line-chart",
+  "status": "draft",
+  "inputRequirement": "有序时间或类别数据",
+  "expectedOutput": "趋势图及断点说明",
+  "limitation": "不把无序类别连接成连续过程",
+  "decisions": [
+    {
+      "step": "核对时间间隔与缺口",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分插值和真实观测",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "标注多系列及共同尺度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

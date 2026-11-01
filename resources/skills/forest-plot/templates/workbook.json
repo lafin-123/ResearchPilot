@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "forest-plot",
+  "status": "draft",
+  "inputRequirement": "可比效应置信区间及研究标签",
+  "expectedOutput": "森林图规格与来源表",
+  "limitation": "未实际合成不能画虚假汇总菱形",
+  "decisions": [
+    {
+      "step": "统一效应尺度与方向",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分线性和对数轴",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "标记权重区间及异质性来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

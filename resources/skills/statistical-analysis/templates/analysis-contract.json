@@ -1,0 +1,17 @@
+{
+  "question": "TODO",
+  "primaryEndpoint": "TODO",
+  "independentSamplingUnit": "TODO",
+  "design": "TODO: paired or independent",
+  "control": "baseline",
+  "treatment": "proposed",
+  "missingnessPolicy": "TODO: no silent deletion",
+  "practicalEffectThreshold": "TODO: before inspecting outcomes",
+  "multiplicity": "TODO: primary family and correction or exploratory label",
+  "sourceRunIds": [],
+  "sourceFiles": [],
+  "seed": 42,
+  "resamples": 5000,
+  "prespecified": false,
+  "deviations": []
+}

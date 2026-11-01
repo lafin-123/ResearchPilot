@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "scoping-review",
+  "status": "draft",
+  "inputRequirement": "主题、证据类型和范围",
+  "expectedOutput": "证据分布及范围图谱说明",
+  "limitation": "证据数量不等于效力强度",
+  "decisions": [
+    {
+      "step": "确定概念边界",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "编码研究类型与场景",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "列出覆盖空白而非效应结论",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

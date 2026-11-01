@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "multiple-testing",
+  "status": "draft",
+  "inputRequirement": "终点族和比较计划",
+  "expectedOutput": "比较族与错误率控制表",
+  "limitation": "不能挑选显著结果隐藏检验数",
+  "decisions": [
+    {
+      "step": "界定确认性检验族",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "选择FWER或FDR目标",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告全部检验和校正方法",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

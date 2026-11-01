@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "screening-criteria",
+  "status": "draft",
+  "inputRequirement": "综述问题与研究设计",
+  "expectedOutput": "纳排规则与边界案例",
+  "limitation": "不能看结果后修改标准却不披露",
+  "decisions": [
+    {
+      "step": "定义人群干预结局",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "演练模糊案例",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录规则版本和变更理由",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

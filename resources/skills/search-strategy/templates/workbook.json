@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "search-strategy",
+  "status": "draft",
+  "inputRequirement": "研究问题、概念组和检索平台",
+  "expectedOutput": "可复制检索式与调整日志",
+  "limitation": "不同数据库字段语法不能混用",
+  "decisions": [
+    {
+      "step": "拆分核心概念与同义词",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录布尔逻辑及字段限制",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "用已知种子文献检查漏检",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

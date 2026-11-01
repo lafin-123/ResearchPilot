@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "anonymization-review",
+  "status": "draft",
+  "inputRequirement": "字段列表与共享场景",
+  "expectedOutput": "再识别风险和最小化方案",
+  "limitation": "不保证匿名或替代隐私审查",
+  "decisions": [
+    {
+      "step": "识别直接与准标识符",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "评估组合链接风险",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "提出可逆隔离及授权共享方案",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

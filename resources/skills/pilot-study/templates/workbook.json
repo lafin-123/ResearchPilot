@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "pilot-study",
+  "status": "draft",
+  "inputRequirement": "主要流程未知和资源限制",
+  "expectedOutput": "小规模试验及继续停止标准",
+  "limitation": "预实验效应不能作为确证结论",
+  "decisions": [
+    {
+      "step": "优先测试招募测量和运行",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "预定可行性阈值",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录暴露问题后再规划正式研究",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

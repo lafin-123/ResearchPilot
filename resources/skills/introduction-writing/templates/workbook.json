@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "introduction-writing",
+  "status": "draft",
+  "inputRequirement": "研究问题证据与贡献范围",
+  "expectedOutput": "问题缺口贡献论证链",
+  "limitation": "不能用空泛重要性替代证据",
+  "decisions": [
+    {
+      "step": "说明具体研究语境",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "综合已有证据而非罗列",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "收束可检验问题与贡献",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

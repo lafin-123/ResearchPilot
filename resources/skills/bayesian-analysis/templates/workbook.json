@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "bayesian-analysis",
+  "status": "draft",
+  "inputRequirement": "似然先验和决策问题",
+  "expectedOutput": "先验依据与诊断计划",
+  "limitation": "未经计算不生成后验区间",
+  "decisions": [
+    {
+      "step": "说明先验尺度及来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划先验预测与收敛诊断",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "比较敏感性而非只看单一后验",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "simulation-design",
+  "status": "draft",
+  "inputRequirement": "生成机制参数和科学问题",
+  "expectedOutput": "情景设计与Monte Carlo误差说明",
+  "limitation": "仿真不能冒充现实数据验证",
+  "decisions": [
+    {
+      "step": "写明数据生成过程",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "系统变化关键参数",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告重复次数偏差覆盖率及适用范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,39 @@
+.modal.wide:has(.figure-studio-layout) { width: min(1280px, calc(100vw - 48px)); max-width: calc(100vw - 48px); }
+.figure-page { --figure-ink: #182a42; --figure-muted: #53657a; --figure-border: #dfe6ef; --figure-plane: #f4f7fb; }
+.figure-image-empty { display: grid; place-items: center; color: var(--muted); }
+.figure-card .figure-img { width: 100%; aspect-ratio: 5 / 3; object-fit: contain; background: white; }
+.figure-card .figure-info { padding: 18px; }
+.figure-card-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+.figure-source { color: var(--figure-muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; margin: 10px 0; }
+.figure-studio-layout { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(340px, 1.12fr); gap: 24px; align-items: start; }
+.figure-controls { display: grid; gap: 15px; min-width: 0; }
+.figure-controls .field { margin: 0; }
+.figure-provenance-row { display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 12px; }
+.figure-provenance-row label { display: flex; gap: 7px; align-items: center; }
+.figure-data-input, .figure-python-input { font-family: var(--font-mono, monospace); font-size: 12px; line-height: 1.7; tab-size: 12; white-space: pre; min-height: 230px; resize: vertical; }
+.figure-python-input { min-height: 340px; }
+.figure-help { color: #53657a; font-size: 11px; line-height: 1.7; margin: 0; }
+.figure-preview-panel { position: sticky; top: 0; border: 1px solid #dfe6ef; background: #f4f7fb; padding: 16px; border-radius: 12px; display: grid; gap: 16px; min-width: 0; }
+.figure-preview-panel strong { color: #182a42; font-size: 13px; }
+.figure-live-preview { background: #fff; border: 1px solid #dfe6ef; border-radius: 7px; color-scheme: light; overflow: hidden; }
+.figure-live-preview svg { display: block; width: 100%; height: auto; }
+.figure-live-preview svg [tabindex]:focus { outline: 2px solid #2453d4; }
+.figure-preview-tip { padding: 10px 12px; min-height: 52px; border-top: 1px solid #dfe6ef; color: #53657a; font-size: 11px; line-height: 1.6; }
+.figure-validation { min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 26px; text-align: center; background: white; border-radius: 8px; color: #53657a; }
+.figure-validation p { font-size: 12px; margin: 0; overflow-wrap: anywhere; }
+.figure-validation span { font-size: 11px; line-height: 1.7; }
+.figure-node-list { display: grid; gap: 10px; max-height: 400px; overflow: auto; }
+.figure-node { background: #f4f7fb; border: 1px solid #dfe6ef; border-radius: 8px; padding: 10px; display: grid; gap: 9px; }
+.figure-node-heading { display: flex; align-items: center; justify-content: space-between; }
+.figure-coordinates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.figure-coordinates input { width: 100%; min-width: 0; }
+.figure-edge { display: grid; grid-template-columns: minmax(85px,1fr) 12px minmax(85px,1fr) minmax(80px,1fr) 24px; gap: 5px; align-items: center; }
+.figure-edge input, .figure-edge select { min-width: 0; }
+.figure-save-note { font-size: 11px; color: #53657a; margin-right: auto; }
+.figure-data-table { font-size: 12px; color: #182a42; }
+.figure-data-table summary { cursor: pointer; padding: 5px 0 9px; }
+.figure-data-table > div { max-height: 220px; overflow: auto; background: white; }
+.figure-data-table table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.figure-data-table th, .figure-data-table td { padding: 8px 10px; text-align: left; border: 1px solid #dfe6ef; }
+@media (max-width: 1050px) { .figure-studio-layout { grid-template-columns: 1fr; } .figure-preview-panel { position: static; } }
+@media (forced-colors: active) { .figure-live-preview svg { forced-color-adjust: none; } .figure-data-table { border: 1px solid CanvasText; } }

@@ -1,0 +1,30 @@
+{
+  "status": "template-not-reviewed",
+  "manuscriptVersion": "",
+  "section": "",
+  "audience": "",
+  "expectedMeaning": "",
+  "outputLanguage": "keep-original",
+  "preserve": {
+    "claimsAndScope": [],
+    "numbersAndUnits": [],
+    "statisticalSymbols": [],
+    "terms": [],
+    "citationsAndAttribution": [],
+    "negationsAndUncertainty": []
+  },
+  "edits": [
+    {
+      "locator": "",
+      "original": "",
+      "revision": "",
+      "reason": "",
+      "changesScientificMeaning": "not-reviewed",
+      "authorDecision": "pending"
+    }
+  ],
+  "unverifiedItems": [],
+  "modelRewriteExecuted": false,
+  "externalDetectionExecuted": false,
+  "note": "Template only. Fill from actual manuscript and evidence; no detector scores or passing claims."
+}

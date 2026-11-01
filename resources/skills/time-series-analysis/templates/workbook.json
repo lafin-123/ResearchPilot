@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "time-series-analysis",
+  "status": "draft",
+  "inputRequirement": "时间索引频率和预测目标",
+  "expectedOutput": "时间切分及诊断方案",
+  "limitation": "禁止随机划分泄漏未来信息",
+  "decisions": [
+    {
+      "step": "核查趋势季节缺口",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "按时间建立滚动验证",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "对比朴素基线及残差结构",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

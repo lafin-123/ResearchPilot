@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "journal-formatting",
+  "status": "draft",
+  "inputRequirement": "稿件类型和实际格式规范",
+  "expectedOutput": "格式差异表和修改清单",
+  "limitation": "文字草稿不承诺保留复杂DOCX版式",
+  "decisions": [
+    {
+      "step": "检查标题摘要字数及章节",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对图表与补充材料要求",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留无法自动修改的版面问题",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

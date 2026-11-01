@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "command": "TODO: exact approved rerun command, not executed by verifier",
+  "environment": "TODO: Python/OS/tool versions and lock-file path, no secrets",
+  "samplingUnit": "TODO: independent sampling unit",
+  "seeds": [],
+  "runIds": [],
+  "files": [{"path": "TODO: project-relative actual artifact", "sha256": "TODO: actual SHA-256"}],
+  "reproductionTolerance": "TODO: prespecified numerical tolerance and reason",
+  "dataAccessLimits": "TODO"
+}

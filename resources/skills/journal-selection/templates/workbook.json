@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "journal-selection",
+  "status": "draft",
+  "inputRequirement": "研究范围文章类型和可核验指南",
+  "expectedOutput": "候选期刊及适配差距",
+  "limitation": "不能保证录用或编造影响因子费用",
+  "decisions": [
+    {
+      "step": "比较期刊范围和文章类型",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对实际指南与时间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录费用开放获取及证据缺口",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "mixed-methods",
+  "status": "draft",
+  "inputRequirement": "定量质性问题和整合目的",
+  "expectedOutput": "时序设计及整合矩阵",
+  "limitation": "并排放两种结果不等于整合",
+  "decisions": [
+    {
+      "step": "选择解释型或探索型时序",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "定义抽样链接与整合点",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留不一致发现的解释路径",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

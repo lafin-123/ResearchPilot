@@ -1,0 +1,51 @@
+.modal.wide:has(.pdf-reader) { width: min(1320px, calc(100vw - 40px)); max-width: calc(100vw - 40px); }
+.pdf-reader { color: var(--text, #292929); font-size: 12px; }
+.pdf-reader-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding-bottom: 10px; }
+.pdf-reader-toolbar label { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.pdf-reader-toolbar input { width: 56px; }
+.pdf-reader input, .pdf-reader select, .pdf-reader textarea { font: inherit; color: inherit; background: var(--surface, #fff); border: 1px solid var(--border, #d8d8d8); border-radius: 4px; padding: 5px 6px; }
+.pdf-reader :is(button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #777; outline-offset: 2px; }
+.pdf-reader-hint { color: var(--muted, #6b6b6b); margin-left: auto; font-size: 11px; }
+.pdf-reader-layout { display: grid; grid-template-columns: minmax(0, 1fr) 286px; height: 68vh; min-height: 320px; border: 1px solid var(--border, #d8d8d8); border-radius: 5px; overflow: hidden; }
+.pdf-reader-paper-area { position: relative; overflow: auto; background: #e9e9e7; padding: 16px; }
+.pdf-reader-page { position: relative; flex-shrink: 0; margin: 0 auto; background: #fff; box-shadow: 0 1px 5px #0002; overflow: hidden; }
+.pdf-reader-page canvas { display: block; }
+.pdf-render-status { position: sticky; top: 0; z-index: 4; padding: 6px; background: #f6f6f4; color: #555; }
+.pdf-reader-message { padding: 12px; color: var(--muted, #666); line-height: 1.6; }
+.pdf-annotations { display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--border, #d8d8d8); background: var(--surface, #fff); }
+.pdf-annotation-editor { padding: 12px; border-bottom: 1px solid var(--border, #ddd); }
+.pdf-comment-label { display: block; margin: 8px 0 4px; font-size: 11px; }
+.pdf-annotation-editor textarea { width: 100%; resize: vertical; min-height: 65px; max-height: 150px; }
+.pdf-annotation-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.pdf-reader blockquote { margin: 8px 0; padding: 0 0 0 9px; border-left: 2px solid #b4b4ab; color: var(--muted, #666); font-size: 11px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 110px; overflow: auto; }
+.pdf-annotation-list-head { display: flex; justify-content: space-between; padding: 11px 12px 6px; font-size: 11px; }
+.pdf-annotation-list-head span { color: var(--muted, #777); }
+.pdf-annotation-list { flex: 1; min-height: 80px; overflow: auto; padding: 0 8px; }
+.pdf-annotation-item { border: 1px solid transparent; border-bottom-color: var(--border, #ddd); border-radius: 3px; margin: 4px 0; }
+.pdf-annotation-item.selected { border-color: #9b9b90; background: #f5f5f1; color: #333; }
+.pdf-annotation-locator { display: block; padding: 9px 7px 5px; width: 100%; background: none; border: 0; color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.pdf-annotation-locator p { margin: 5px 0; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; white-space: pre-wrap; }
+.pdf-annotation-item-actions { display: flex; justify-content: flex-end; gap: 10px; padding: 0 7px 7px; }
+.pdf-annotation-item-actions button { color: var(--muted, #666); font: inherit; font-size: 11px; border: 0; background: none; padding: 3px; cursor: pointer; }
+.pdf-empty { padding: 10px 4px; color: var(--muted, #777); line-height: 1.7; }
+.pdf-note-actions { border-top: 1px solid var(--border, #ddd); padding: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+.pdf-note-actions p { width: 100%; margin: 3px 0 0; color: var(--muted, #777); font-size: 10px; line-height: 1.5; }
+.pdf-color-dot { display: inline-block; height: 9px; width: 9px; border: 1px solid #0002; border-radius: 50%; margin-right: 6px; }
+.pdf-color-dot.yellow { background: #d8c65d; }.pdf-color-dot.green { background: #8eaf83; }.pdf-color-dot.rose { background: #c99d9d; }
+.pdf-highlight-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; mix-blend-mode: multiply; }
+.pdf-highlight { position: absolute; pointer-events: none; }
+.pdf-highlight.yellow { background: #ead55d66; }.pdf-highlight.green { background: #8ebf8566; }.pdf-highlight.rose { background: #d6a0a066; }
+.pdf-highlight.selected { outline: 1px solid #67675c88; }.pdf-highlight.draft { outline: 1px dashed #777; }
+/* PDF.js TextLayer v6 positioning contract. No AnnotationLayer or scripting/action UI is mounted. */
+.pdf-text-layer { color-scheme: only light; position: absolute; text-align: initial; inset: 0; overflow: clip; opacity: 1; line-height: 1; letter-spacing: normal; word-spacing: normal; text-size-adjust: none; forced-color-adjust: none; transform-origin: 0 0; caret-color: CanvasText; z-index: 2; --min-font-size: 1; --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size)); --min-font-size-inv: calc(1 / var(--min-font-size)); }
+.pdf-text-layer :is(span, br) { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0 0; user-select: text; }
+.pdf-text-layer > :not(.markedContent), .pdf-text-layer .markedContent span:not(.markedContent) { z-index: 1; --font-height: 0; font-size: calc(var(--text-scale-factor) * var(--font-height)); --scale-x: 1; --rotate: 0deg; transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv)); }
+.pdf-text-layer .markedContent { display: contents; }
+.pdf-text-layer { --scale-round-x: 1px; --scale-round-y: 1px; }
+.pdf-text-layer[data-main-rotation="90"] { transform: rotate(90deg) translateY(-100%); }
+.pdf-text-layer[data-main-rotation="180"] { transform: rotate(180deg) translate(-100%, -100%); }
+.pdf-text-layer[data-main-rotation="270"] { transform: rotate(270deg) translateX(-100%); }
+.pdf-text-layer span[role="img"] { user-select: none; cursor: default; }
+.pdf-text-layer ::selection { background: #738cbd66; color: transparent; }
+@media (max-width: 850px) { .pdf-reader-layout { grid-template-columns: minmax(0, 1fr) 235px; } .pdf-reader-hint { display: none; } }
+@media (max-width: 620px) { .pdf-reader-layout { grid-template-columns: 1fr; height: 72vh; overflow: auto; } .pdf-reader-paper-area { min-height: 320px; max-height: 48vh; } .pdf-annotations { border-left: 0; border-top: 1px solid #ddd; min-height: 300px; } }

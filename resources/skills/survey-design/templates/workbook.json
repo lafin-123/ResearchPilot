@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "survey-design",
+  "status": "draft",
+  "inputRequirement": "构念人群和使用场景",
+  "expectedOutput": "题项池及预测试方案",
+  "limitation": "未验证量表不能宣称信效度成立",
+  "decisions": [
+    {
+      "step": "建立构念到题项映射",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查诱导双重问题和跳题",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划认知访谈及试测",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

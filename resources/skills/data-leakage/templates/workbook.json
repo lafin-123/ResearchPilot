@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "data-leakage",
+  "status": "draft",
+  "inputRequirement": "划分预处理标签时间与实体",
+  "expectedOutput": "泄漏路径及重评估计划",
+  "limitation": "泄漏后的测试指标不能作为无偏证据",
+  "decisions": [
+    {
+      "step": "追踪主体和时间重叠",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核查预处理拟合范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "隔离调参和最终测试",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

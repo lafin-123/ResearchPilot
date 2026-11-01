@@ -1,0 +1,10 @@
+[
+  {
+    "claim": "TODO: exact sentence from manuscript",
+    "sourceId": "TODO: actual local reference id or citekey",
+    "quote": "TODO: exact supporting passage actually inspected",
+    "locator": "TODO: page, section, table or figure",
+    "supportReviewed": false,
+    "limits": "TODO: population, design and inference limitations"
+  }
+]

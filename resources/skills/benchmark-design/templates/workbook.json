@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "benchmark-design",
+  "status": "draft",
+  "inputRequirement": "比较对象硬件和预算",
+  "expectedOutput": "可复现实验矩阵",
+  "limitation": "不同硬件预算不能公平排名",
+  "decisions": [
+    {
+      "step": "固定工作负载与预热规则",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告资源和方差",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录超时失败而非删除",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

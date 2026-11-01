@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "qualitative-analysis",
+  "status": "draft",
+  "inputRequirement": "匿名材料和研究问题",
+  "expectedOutput": "代码本主题及反例记录",
+  "limitation": "不伪造访谈引语或饱和判断",
+  "decisions": [
+    {
+      "step": "记录研究立场及材料范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "用原文建立编码及审计轨迹",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留异例和解释分歧",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

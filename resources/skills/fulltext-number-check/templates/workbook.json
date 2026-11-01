@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "fulltext-number-check",
+  "status": "draft",
+  "inputRequirement": "全文与稿件中的数值单位",
+  "expectedOutput": "数字来源与差异清单",
+  "limitation": "不能把四舍五入差异自动当造假",
+  "decisions": [
+    {
+      "step": "登记分母单位时间点",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核查表图正文对应数值",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "解释合法舍入并保留冲突",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

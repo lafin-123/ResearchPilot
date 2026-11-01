@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "figure-selection",
+  "status": "draft",
+  "inputRequirement": "变量尺度与想回答的问题",
+  "expectedOutput": "图形选择与编码方案",
+  "limitation": "不能以美观优先歪曲数据",
+  "decisions": [
+    {
+      "step": "区分分布比较关系和时间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "选择位置长度等合适编码",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对零基线与变换",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

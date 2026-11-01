@@ -1,0 +1,6 @@
+[
+  {"name":"image-only slide","action":"inspect a PPTX containing only a chart PNG","expect":"blocked; do not claim native editability"},
+  {"name":"native chart export","action":"export supported real chart spec","expect":"chart XML + slide chart ref + embedded workbook, exact data preserved; manual QA separate"},
+  {"name":"demo data","action":"use bundled template unchanged","expect":"isDemo=true, clear demonstration label, excluded from evidence gate"},
+  {"name":"unsupported interval","request":"native confidence band","expect":"state schema limitation, preserve interval table, never drop uncertainty or call a raster native"}
+]

@@ -1,0 +1,6 @@
+[
+  {"name":"deterministic paired shift","input":"unit_id,group,value\na,baseline,1\nb,baseline,2\na,proposed,3\nb,proposed,4\n","paired":true,"expect":"difference=2; ci95=[2,2]; small-sample warning; identical for fixed seed"},
+  {"name":"pseudoreplication","input":"unit_id,group,value\na,baseline,1\na,baseline,2\nc,proposed,3\nd,proposed,4\n","paired":false,"expect":"blocked; duplicate sampling unit"},
+  {"name":"incomplete pairs","input":"unit_id,group,value\na,baseline,1\nb,baseline,2\na,proposed,3\nc,proposed,4\n","paired":true,"expect":"blocked; no implicit intersection or row dropping"},
+  {"name":"unsupported design","request":"fit clustered survival model","expect":"do not use bootstrap mean comparison; explain missing design/tool and request approval"}
+]

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "data-dictionary",
+  "status": "draft",
+  "inputRequirement": "字段表和采集说明",
+  "expectedOutput": "变量字典与合法值清单",
+  "limitation": "不能从字段名臆测单位或含义",
+  "decisions": [
+    {
+      "step": "登记类型单位编码与缺失码",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录派生公式和时间窗口",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "标注未知语义与责任人",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,30 @@
+{
+  "status": "template-not-reviewed",
+  "reportOrigin": "user-supplied-label-only",
+  "reportExcerpt": "",
+  "originalPassage": "",
+  "expectedMeaning": "",
+  "paragraphFunction": "",
+  "sources": [
+    {
+      "label": "",
+      "locator": "",
+      "suppliedExcerpt": "",
+      "supportsClaim": "",
+      "contextReviewed": false,
+      "quoteOrParaphrase": "undecided"
+    }
+  ],
+  "preserve": {
+    "numbersAndUnits": [],
+    "terms": [],
+    "citationMarkers": [],
+    "qualifiersAndNegations": []
+  },
+  "newReasoningOrder": [],
+  "revision": "",
+  "changeReasons": [],
+  "unverifiedItems": [],
+  "externalDatabaseAccessed": false,
+  "note": "Populate with actual supplied material. No similarity target, detection guarantee or invented evidence."
+}

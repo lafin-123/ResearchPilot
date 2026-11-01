@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "cover-letter",
+  "status": "draft",
+  "inputRequirement": "稿件真实贡献和期刊范围",
+  "expectedOutput": "投稿信草案",
+  "limitation": "不虚构独家投稿或全体作者同意",
+  "decisions": [
+    {
+      "step": "具体说明贡献与适配",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分已确认声明与待签署项",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对题名作者和联系人",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

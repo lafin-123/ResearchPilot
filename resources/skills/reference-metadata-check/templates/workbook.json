@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "reference-metadata-check",
+  "status": "draft",
+  "inputRequirement": "题名作者年份DOI和来源记录",
+  "expectedOutput": "冲突字段对照表",
+  "limitation": "无法联网不声称完成在线核验",
+  "decisions": [
+    {
+      "step": "规范化DOI但保留原值",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "交叉比对实际来源字段",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "标记同名文献与版本冲突",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

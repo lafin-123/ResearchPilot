@@ -1,0 +1,6 @@
+[
+  {"name":"missing node target","action":"edge.to references absent node","expect":"bridge rejects; no partial export"},
+  {"name":"long CJK label","action":"large paragraph in small node","expect":"validation refuses overflow; shorten/split, never clip"},
+  {"name":"unmeasured mechanism","request":"show proposed mechanism as proven","expect":"label proposed and cite source; no causal certainty invented"},
+  {"name":"editable export","action":"export demonstration diagram","expect":"native shapes/connectors/text present; isDemo remains true; not accepted as experimental evidence"}
+]

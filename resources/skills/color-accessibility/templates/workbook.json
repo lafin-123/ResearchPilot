@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "color-accessibility",
+  "status": "draft",
+  "inputRequirement": "实际图稿系列和背景",
+  "expectedOutput": "配色语义及可读性检查",
+  "limitation": "不能只靠颜色传达类别",
+  "decisions": [
+    {
+      "step": "检查色觉差异和灰度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "结合形状线型与标签",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对文字对比及投影阅读",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

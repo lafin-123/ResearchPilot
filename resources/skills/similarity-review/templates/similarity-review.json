@@ -1,0 +1,30 @@
+{
+  "status": "template-not-run",
+  "scope": "explicitly-user-supplied-text-only",
+  "reportOriginLabel": "local-or-user-supplied-report",
+  "manuscriptVersion": "",
+  "externalDatabaseAccessed": false,
+  "localMethodExecuted": false,
+  "analyzedRange": null,
+  "sources": [
+    {
+      "label": "",
+      "analyzedRange": null,
+      "truncated": false
+    }
+  ],
+  "findings": [
+    {
+      "draftLocator": "",
+      "boundedDraftExcerpt": "",
+      "sourceLabel": "",
+      "sourceLocator": "",
+      "classification": "requires-human-review",
+      "attributionReviewed": false,
+      "action": "",
+      "uncertainty": ""
+    }
+  ],
+  "limitations": ["Not an AI detector or plagiarism database", "No score, rate or passing guarantee", "Reference body omitted from the report"],
+  "unreviewedItems": []
+}

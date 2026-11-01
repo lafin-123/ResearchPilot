@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "fulltext-method-check",
+  "status": "draft",
+  "inputRequirement": "来源全文与方法描述",
+  "expectedOutput": "方法一致性及遗漏表",
+  "limitation": "摘要不能证明随机化盲法或排除标准",
+  "decisions": [
+    {
+      "step": "定位样本与设计",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对测量分析及排除步骤",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "标出来源未报告而非推断未实施",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

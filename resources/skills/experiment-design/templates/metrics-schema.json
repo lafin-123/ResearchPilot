@@ -1,0 +1,9 @@
+{
+  "primary_metric": "accuracy",
+  "fields": {
+    "accuracy": { "type": "number", "range": [0, 1], "direction": "higher" },
+    "loss": { "type": "number", "direction": "lower" },
+    "n": { "type": "integer", "minimum": 1 },
+    "seed": { "type": "integer" }
+  }
+}

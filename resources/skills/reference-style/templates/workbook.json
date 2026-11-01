@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "reference-style",
+  "status": "draft",
+  "inputRequirement": "真实条目与目标样式",
+  "expectedOutput": "格式统一和缺失字段表",
+  "limitation": "缺字段不能编页码卷期DOI",
+  "decisions": [
+    {
+      "step": "确定引文及文末规则",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规范已有字段和排序",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留待核验元数据",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "ml-evaluation",
+  "status": "draft",
+  "inputRequirement": "任务数据划分模型和指标",
+  "expectedOutput": "评估协议及测试保护规则",
+  "limitation": "不能反复用测试集选模型",
+  "decisions": [
+    {
+      "step": "确定实体时间或域外划分",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "统一训练与调参预算",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告基线不确定性及失败案例",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

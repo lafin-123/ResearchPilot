@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "bar-chart",
+  "status": "draft",
+  "inputRequirement": "类别数值单位和区间",
+  "expectedOutput": "零基线比较图规范",
+  "limitation": "不截断基线夸大差异",
+  "decisions": [
+    {
+      "step": "排序类别并说明聚合",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "显示分母和区间定义",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查负值与单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

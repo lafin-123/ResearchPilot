@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "heatmap",
+  "status": "draft",
+  "inputRequirement": "真实矩阵及缺失掩码",
+  "expectedOutput": "热图规格和尺度说明",
+  "limitation": "默认原生图表不含热图需可信绘图实现",
+  "decisions": [
+    {
+      "step": "确定顺序及归一化含义",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "选择连续或发散色标",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "将缺失与零明确区分",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

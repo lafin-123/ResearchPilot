@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "survival-analysis",
+  "status": "draft",
+  "inputRequirement": "起点事件删失及随访",
+  "expectedOutput": "事件定义和生存分析计划",
+  "limitation": "删失不能当事件或零时间",
+  "decisions": [
+    {
+      "step": "核对时间原点及竞争事件",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "评估删失独立性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "选择模型并检查比例风险假设",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "numerical-validation",
+  "status": "draft",
+  "inputRequirement": "算法方程容差和参考解",
+  "expectedOutput": "误差收敛及边界检查",
+  "limitation": "数值吻合不代表科学假设成立",
+  "decisions": [
+    {
+      "step": "用解析特例或独立实现对照",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查尺度精度和病态输入",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录收敛阶与容差",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

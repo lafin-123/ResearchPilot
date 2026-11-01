@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "supplementary-material",
+  "status": "draft",
+  "inputRequirement": "真实方法数据与额外结果",
+  "expectedOutput": "补充文件目录及交叉引用",
+  "limitation": "不能将关键不利结果藏于补充材料",
+  "decisions": [
+    {
+      "step": "划分核心证据与支持细节",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "建立主文到补充编号",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查复现所需信息完整性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

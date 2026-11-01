@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "thesis-outline",
+  "status": "draft",
+  "inputRequirement": "课题成果和学校要求",
+  "expectedOutput": "章节提纲与证据分配",
+  "limitation": "没有学校规范不编格式规则",
+  "decisions": [
+    {
+      "step": "区分总论与独立研究章",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "映射每章问题方法证据",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划重复内容和贡献归属",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

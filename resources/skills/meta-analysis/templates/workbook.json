@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "meta-analysis",
+  "status": "draft",
+  "inputRequirement": "可比研究的效应与方差",
+  "expectedOutput": "效应提取表与合成方案",
+  "limitation": "无可比效应不得生成汇总估计",
+  "decisions": [
+    {
+      "step": "统一效应方向与尺度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "识别同队列重复研究",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "预定异质性与敏感性分析",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

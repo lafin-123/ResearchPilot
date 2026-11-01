@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "manuscript-consistency",
+  "status": "draft",
+  "inputRequirement": "完整稿件及图表引用",
+  "expectedOutput": "术语缩写编号和数字差异表",
+  "limitation": "无全文只核对实际可见范围",
+  "decisions": [
+    {
+      "step": "建立术语及缩写首次定义",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对章节图表引用编号",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查摘要正文结论一致性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

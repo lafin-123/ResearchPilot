@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "figure-caption",
+  "status": "draft",
+  "inputRequirement": "已生成图稿和真实方法",
+  "expectedOutput": "自包含图注与符号表",
+  "limitation": "不能添加图中没有的显著性",
+  "decisions": [
+    {
+      "step": "说明图形对象和单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "解释n误差及检验",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "给出出处和必要限制",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

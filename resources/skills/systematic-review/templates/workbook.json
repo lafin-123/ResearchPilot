@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "systematic-review",
+  "status": "draft",
+  "inputRequirement": "问题框架与纳排标准",
+  "expectedOutput": "综述协议和筛选台账",
+  "limitation": "不能把一次搜索称为系统综述",
+  "decisions": [
+    {
+      "step": "预先定义检索范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "双阶段筛选记录排除理由",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分已检索与待检索数据库",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "journal-guidelines",
+  "status": "draft",
+  "inputRequirement": "用户提供或实际访问的作者指南",
+  "expectedOutput": "逐条要求与来源定位",
+  "limitation": "期刊名不能替代当前作者指南",
+  "decisions": [
+    {
+      "step": "记录指南版本和获取范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "提取篇幅图表引用及声明要求",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分强制建议与未知",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

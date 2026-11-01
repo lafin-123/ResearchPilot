@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "retraction-check",
+  "status": "draft",
+  "inputRequirement": "文献标识与实际公告",
+  "expectedOutput": "核查时间及公告关联表",
+  "limitation": "未发现公告不等于保证未撤稿",
+  "decisions": [
+    {
+      "step": "区分撤稿勘误关注声明",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对公告对应版本",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告实际查阅来源及时间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

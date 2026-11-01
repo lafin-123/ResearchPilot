@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "poster-presentation",
+  "status": "draft",
+  "inputRequirement": "真实研究内容和展示尺寸",
+  "expectedOutput": "海报内容层级及版面草图",
+  "limitation": "不能将布局草图称为已导出海报",
+  "decisions": [
+    {
+      "step": "提炼一条核心研究信息",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "按阅读距离组织图文",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "规划可追溯来源和无障碍说明",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

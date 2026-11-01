@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "sample-size",
+  "status": "draft",
+  "inputRequirement": "效应假设方差设计与预算",
+  "expectedOutput": "参数情景表及计算方案",
+  "limitation": "不得凭空给出所需样本量",
+  "decisions": [
+    {
+      "step": "明确检验与采样单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "说明效应和损耗假设来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "评估多情景并记录计算工具",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

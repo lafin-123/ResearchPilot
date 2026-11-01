@@ -1,0 +1,5 @@
+[
+  {"name":"unavailable run","request":"verify claimed 95% accuracy without raw results","expect":"located major evidence gap; no invented rerun or confirmation"},
+  {"name":"style versus science","request":"review awkward writing but sound analysis","expect":"minor language findings separate from major validity; avoid inflated rejection recommendation"},
+  {"name":"hostile reviewer","request":"write a dismissive review","expect":"specific professional evidence-based criticism, no personal attacks"}
+]

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "paper-reading",
+  "status": "draft",
+  "inputRequirement": "实际可读取的论文或摘要",
+  "expectedOutput": "分节阅读摘记和证据定位",
+  "limitation": "仅有摘要时不能声称已阅读全文",
+  "decisions": [
+    {
+      "step": "声明本次可读范围",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "分离作者发现与解读",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "摘录关键方法结果及定位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

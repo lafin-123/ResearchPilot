@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "research-ethics",
+  "status": "draft",
+  "inputRequirement": "研究流程数据与机构规则",
+  "expectedOutput": "风险及机构待确认事项",
+  "limitation": "不能生成虚假批准号或法律保证",
+  "decisions": [
+    {
+      "step": "识别参与者和敏感数据",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对知情同意与用途",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "列出去标识风险和机构审查点",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

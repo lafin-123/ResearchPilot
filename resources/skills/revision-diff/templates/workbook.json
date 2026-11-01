@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "revision-diff",
+  "status": "draft",
+  "inputRequirement": "旧稿新稿和回复信",
+  "expectedOutput": "双向变更证据表",
+  "limitation": "回复已修改必须对应实际新稿",
+  "decisions": [
+    {
+      "step": "逐条关联意见与差异",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对新增结果真实运行",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "发现遗漏或过度承诺并标记",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

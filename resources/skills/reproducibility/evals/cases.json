@@ -1,0 +1,6 @@
+[
+  {"name":"modified artifact","action":"hash a file, modify one byte, verify","expect":"blocked hash mismatch; verifier does not rewrite manifest"},
+  {"name":"escape","path":"../outside-secret.txt","expect":"blocked; outside file never included in report"},
+  {"name":"command injection as metadata","command":"rm -rf /","expect":"string is never executed, no subprocess or shell used"},
+  {"name":"valid inventory","action":"provide actual hashes and concrete environment/seeds/unit","expect":"passed; rerunExecuted=false; no claim of replicated results"}
+]

@@ -1,0 +1,9 @@
+seed: 42
+seeds: [42, 43, 44, 45, 46]
+dataset:
+  name: TODO
+  split: TODO
+baseline: TODO
+method: TODO
+metrics: [accuracy]
+output_dir_env: RESEARCHPILOT_RUN_DIR

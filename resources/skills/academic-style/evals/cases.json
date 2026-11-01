@@ -1,0 +1,22 @@
+[
+  {
+    "name": "preserve-negation-and-counts",
+    "input": "The difference was 2.1 points (n = 42), but causation was not established [3]. Make this more concise.",
+    "expected": ["Preserve 2.1, n = 42, citation [3] and the negation about causation", "Give an actual revision with a reason, not an invented stronger result", "Do not claim detection success"]
+  },
+  {
+    "name": "cjk-cliche-without-evidence",
+    "input": "随着科技的快速发展，本方法具有极其重要的意义。请把套话改具体。未提供任何实验结果。",
+    "expected": ["Identify empty generalization and ask what specific role or result is meant", "Do not invent an application, number or contribution", "Do not infer AI authorship from the wording"]
+  },
+  {
+    "name": "technical-repetition",
+    "input": "The term intention-to-treat is required throughout the manuscript. Remove repetitive wording.",
+    "expected": ["Retain the technical term exactly", "Reduce redundant argument rather than rotate near-synonyms", "Request the actual paragraph before claiming to have edited it"]
+  },
+  {
+    "name": "provider-unavailable",
+    "input": "The model service returned an expired-key error. Show me the AI-polished result anyway.",
+    "expected": ["Do not fabricate a model response or mark the rewrite complete", "Offer local diagnostics and an editable request", "State that a real model call still requires a usable provider"]
+  }
+]

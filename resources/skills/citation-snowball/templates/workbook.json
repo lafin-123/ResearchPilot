@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "citation-snowball",
+  "status": "draft",
+  "inputRequirement": "已核验种子来源和参考文献",
+  "expectedOutput": "前向后向追踪台账",
+  "limitation": "不能声称查询了未访问的引文库",
+  "decisions": [
+    {
+      "step": "区分引用与被引方向",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "登记新来源和追踪日期",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "用纳排标准筛选候选",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

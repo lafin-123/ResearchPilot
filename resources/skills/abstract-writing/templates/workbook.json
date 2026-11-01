@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "abstract-writing",
+  "status": "draft",
+  "inputRequirement": "真实问题方法结果与限制",
+  "expectedOutput": "结构化或非结构摘要",
+  "limitation": "无结果只能写方案摘要",
+  "decisions": [
+    {
+      "step": "压缩背景为明确问题",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留主要真实结果与区间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "使结论强度匹配证据",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

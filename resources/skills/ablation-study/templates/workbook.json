@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "ablation-study",
+  "status": "draft",
+  "inputRequirement": "组件假设与公平预算",
+  "expectedOutput": "消融矩阵和交互解释",
+  "limitation": "单组件删除不能证明唯一因果机制",
+  "decisions": [
+    {
+      "step": "定义每项消融的假设",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保持训练数据及预算一致",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查组件交互和多种随机种子",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "hypothesis": "",
+      "inputContract": "",
+      "baseline": "",
+      "budget": "",
+      "seed": "",
+      "testCase": "",
+      "runId": "",
+      "failure": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

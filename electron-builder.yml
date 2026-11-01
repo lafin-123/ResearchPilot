@@ -1,0 +1,48 @@
+appId: com.researchpilot.desktop
+productName: ResearchPilot
+directories:
+  output: release
+  buildResources: build
+asar: false
+npmRebuild: false
+compression: maximum
+files:
+  - out/**/*
+  - package.json
+  - "!**/*.map"
+  - "!node_modules/@deepseek-ai/libreoffice-kit*/**"
+  - "!node_modules/@deepseek-ai/dsh-experimental-speech-to-text-sensevoice/**"
+  - "!node_modules/sherpa-onnx-*/**"
+  - "!node_modules/node-pty/prebuilds/win32-arm64/**"
+  - "!node_modules/node-pty/prebuilds/linux-*/**"
+  - "!node_modules/node-pty/prebuilds/darwin-*/**"
+extraResources:
+  - from: resources/skills
+    to: skills
+  - from: resources/bridge
+    to: bridge
+  - from: resources/agent-plugin
+    to: agent-plugin
+  - from: resources/mcp
+    to: mcp
+  - from: THIRD_PARTY_NOTICES.md
+    to: THIRD_PARTY_NOTICES.md
+  - from: LICENSE.md
+    to: LICENSE.md
+  - from: NOTICE.md
+    to: NOTICE.md
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}-${version}-setup.${ext}
+  icon: resources/icon.png
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ResearchPilot
+  deleteAppDataOnUninstall: false

@@ -1,0 +1,9 @@
+{
+  "manuscriptVersion": "TODO",
+  "scope": "TODO",
+  "strengths": [],
+  "findings": [{"severity":"major","location":"TODO","quotedClaim":"TODO","observedEvidence":"TODO","impact":"TODO","recommendedAction":"TODO","confidence":"TODO","status":"open"}],
+  "questionsNotFindings": [],
+  "uninspectedMaterials": [],
+  "remainingRisks": []
+}

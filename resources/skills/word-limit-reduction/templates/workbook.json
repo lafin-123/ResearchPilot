@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "word-limit-reduction",
+  "status": "draft",
+  "inputRequirement": "原稿和目标字数限制",
+  "expectedOutput": "压缩稿及删改理由",
+  "limitation": "不能靠删数据限制或引用满足字数",
+  "decisions": [
+    {
+      "step": "分配章节预算",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "先去重复及冗余背景",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "复核数值限定条件与证据链",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "journal": "",
+      "articleType": "",
+      "guidelineSource": "",
+      "accessedAt": "",
+      "requirement": "",
+      "mandatory": "",
+      "manuscriptLocator": "",
+      "revision": "",
+      "status": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

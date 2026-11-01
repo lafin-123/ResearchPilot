@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "uncertainty-visualization",
+  "status": "draft",
+  "inputRequirement": "估计值原始重复和区间定义",
+  "expectedOutput": "误差表达及图注",
+  "limitation": "不得把SD SE CI混为一谈",
+  "decisions": [
+    {
+      "step": "确认区间计算方法与单位",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "选择区间带或误差线",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "说明独立样本量及相关结构",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

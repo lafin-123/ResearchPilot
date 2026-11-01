@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "preregistration",
+  "status": "draft",
+  "inputRequirement": "研究问题设计和预定终点",
+  "expectedOutput": "可审阅预注册协议",
+  "limitation": "不追溯伪造研究开始前注册",
+  "decisions": [
+    {
+      "step": "分离确认性与探索性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "锁定终点排除及停止规则",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录当前研究阶段和偏离计划",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

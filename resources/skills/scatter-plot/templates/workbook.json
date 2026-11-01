@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skill": "scatter-plot",
+  "status": "draft",
+  "inputRequirement": "真实成对数值与分组",
+  "expectedOutput": "散点编码及关系说明",
+  "limitation": "相关线不能冒充因果",
+  "decisions": [
+    {
+      "step": "检查X Y单位与异常值",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "处理重叠但保留分布",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告拟合范围和不确定性",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "question": "",
+      "sourcePath": "",
+      "runId": "",
+      "encoding": "",
+      "units": "",
+      "sampleSize": "",
+      "uncertainty": "",
+      "caption": "",
+      "implementation": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

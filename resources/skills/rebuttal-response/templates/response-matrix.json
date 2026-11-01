@@ -1,0 +1,25 @@
+{
+  "status": "template-not-reviewed",
+  "originalManuscriptVersion": "",
+  "revisedManuscriptVersion": "",
+  "editorRequirements": [],
+  "responses": [
+    {
+      "reviewerId": "",
+      "commentId": "",
+      "exactComment": "",
+      "underlyingConcern": "",
+      "subitems": [],
+      "decision": "pending",
+      "workStatus": "not-verified",
+      "actualAction": "",
+      "evidenceArtifacts": [],
+      "manuscriptLocator": "",
+      "quotedRevision": "",
+      "draftResponse": "",
+      "unresolvedItems": [],
+      "authorConfirmed": false
+    }
+  ],
+  "note": "No invented experiments, results, page numbers, completed changes or acceptance claims."
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "diagram",
+  "title": "Proposed study flow (demonstration)",
+  "provenance": {"sourceLabel": "Demonstration template; replace with an inspected protocol", "isDemo": true},
+  "nodes": [
+    {"id":"input","label":"Eligible samples","shape":"roundRect","x":40,"y":155,"width":230,"height":100},
+    {"id":"method","label":"Prespecified method","shape":"rect","x":385,"y":155,"width":230,"height":100},
+    {"id":"outcome","label":"Measured outcome","shape":"roundRect","x":730,"y":155,"width":230,"height":100}
+  ],
+  "edges": [
+    {"id":"e1","from":"input","to":"method","label":"Apply protocol"},
+    {"id":"e2","from":"method","to":"outcome","label":"Measure"}
+  ]
+}

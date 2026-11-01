@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "reference-deduplication",
+  "status": "draft",
+  "inputRequirement": "参考文献导出表",
+  "expectedOutput": "重复候选与保留理由",
+  "limitation": "不自动删除多版本或勘误来源",
+  "decisions": [
+    {
+      "step": "优先匹配规范DOI",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "比较题名作者及版本",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "保留预印本正式版关系",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

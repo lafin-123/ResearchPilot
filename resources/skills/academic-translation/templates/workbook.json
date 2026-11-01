@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "academic-translation",
+  "status": "draft",
+  "inputRequirement": "原文术语及目标语言",
+  "expectedOutput": "双语对照与术语表",
+  "limitation": "不能借翻译增强结论或补充证据",
+  "decisions": [
+    {
+      "step": "锁定术语数值和否定",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "处理长句而保留逻辑",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "回查歧义及不可直译项",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

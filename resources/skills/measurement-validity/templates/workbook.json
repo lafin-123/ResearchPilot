@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "measurement-validity",
+  "status": "draft",
+  "inputRequirement": "构念操作定义及测量工具",
+  "expectedOutput": "效度证据与测量风险表",
+  "limitation": "高内部一致性不等于整体效度",
+  "decisions": [
+    {
+      "step": "明确测量对象和时间尺度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对内容结构效标证据",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录跨群体适用性和误差",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "researchQuestion": "",
+      "population": "",
+      "samplingUnit": "",
+      "primaryOutcome": "",
+      "assumptions": "",
+      "decision": "",
+      "alternative": "",
+      "ethicsStatus": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

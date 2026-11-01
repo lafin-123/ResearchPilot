@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "discussion-writing",
+  "status": "draft",
+  "inputRequirement": "结果与相邻证据",
+  "expectedOutput": "解释限制和未来工作",
+  "limitation": "不能把事后解释写成预定假设",
+  "decisions": [
+    {
+      "step": "回答研究问题",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "对照支持及冲突来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "限定机制推测和外部效度",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

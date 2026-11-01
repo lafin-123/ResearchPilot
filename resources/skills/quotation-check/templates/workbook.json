@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "quotation-check",
+  "status": "draft",
+  "inputRequirement": "直接引用及实际全文",
+  "expectedOutput": "逐字引用和定位差异表",
+  "limitation": "不能从二手引文补造原文页码",
+  "decisions": [
+    {
+      "step": "比较引号内原句",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "核对省略和翻译是否改变原意",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "用所读版本记录页码或章节",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

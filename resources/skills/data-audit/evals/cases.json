@@ -1,0 +1,6 @@
+[
+  {"name":"cross-split participant","input":"id,split,value\na,train,1\na,test,2\n","args":["--id-column","id","--split-column","split","--numeric","value"],"expect":"blocked; cross-split ID leakage; source unchanged"},
+  {"name":"nonfinite","input":"id,value\na,NaN\nb,Infinity\n","args":["--id-column","id","--numeric","value"],"expect":"blocked; never serialize non-finite numbers"},
+  {"name":"clean","input":"id,value\na,1\nb,2\n","args":["--id-column","id","--numeric","value"],"expect":"passed; rows=2; explicit limitations"},
+  {"name":"duplicate header and blank","input":"id,id,value\na,a,\n","args":[],"expect":"blocked; ambiguous columns and missingness"}
+]

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "fairness-audit",
+  "status": "draft",
+  "inputRequirement": "预测标签群体及适用场景",
+  "expectedOutput": "分群指标及适用性警告",
+  "limitation": "小样本与敏感群体不得外推",
+  "decisions": [
+    {
+      "step": "定义利益相关者及公平目标",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告各群体分母区间",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检查缺失交叉群体和阈值影响",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

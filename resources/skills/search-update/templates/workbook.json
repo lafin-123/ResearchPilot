@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "search-update",
+  "status": "draft",
+  "inputRequirement": "旧检索日志和截止日期",
+  "expectedOutput": "新增证据及变更摘要",
+  "limitation": "无法访问平台时只交更新方案",
+  "decisions": [
+    {
+      "step": "复用旧检索字段",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "明确日期窗口和去重规则",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录新证据是否改变原结论",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

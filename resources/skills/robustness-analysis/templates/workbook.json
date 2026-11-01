@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "robustness-analysis",
+  "status": "draft",
+  "inputRequirement": "主分析和可争议假设",
+  "expectedOutput": "预定敏感性矩阵",
+  "limitation": "不是反复试直到显著",
+  "decisions": [
+    {
+      "step": "列出结论依赖假设",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "设定替代合理规格",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告全部规格与方向变化",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "estimand": "",
+      "samplingUnit": "",
+      "design": "",
+      "assumptions": "",
+      "model": "",
+      "diagnostics": "",
+      "sensitivityPlan": "",
+      "analysisRunId": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

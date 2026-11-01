@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "methods-writing",
+  "status": "draft",
+  "inputRequirement": "真实协议代码与偏离记录",
+  "expectedOutput": "可复现方法章节",
+  "limitation": "不得补造随机盲法或未执行步骤",
+  "decisions": [
+    {
+      "step": "按采样测量分析顺序",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "报告参数排除软件版本",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "披露协议偏离和伦理来源",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "section": "",
+      "originalText": "",
+      "claim": "",
+      "evidenceId": "",
+      "proposedText": "",
+      "changeReason": "",
+      "preservedFacts": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

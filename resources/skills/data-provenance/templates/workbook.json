@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "data-provenance",
+  "status": "draft",
+  "inputRequirement": "原始文件转换步骤和版本",
+  "expectedOutput": "来源转换与产物链",
+  "limitation": "哈希不能证明数据真实",
+  "decisions": [
+    {
+      "step": "区分原始与派生",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "记录工具版本参数与哈希",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "追踪每次转换的输入输出",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "sourcePath": "",
+      "sourceHash": "",
+      "dataOwner": "",
+      "samplingUnit": "",
+      "field": "",
+      "rule": "",
+      "affectedCount": "",
+      "privacyRisk": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

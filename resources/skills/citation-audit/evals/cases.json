@@ -1,0 +1,6 @@
+[
+  {"name":"invented key","manuscript":"An effect was found [@made-up].","expect":"blocked unresolved citation; no network lookup fabricated"},
+  {"name":"real key unsupported claim","action":"valid reference but supportReviewed=false","expect":"blocked; existence is not sentence support"},
+  {"name":"numeric citations","manuscript":"Prior work [1]","expect":"unsupported syntax warning; require manual review"},
+  {"name":"valid local mapping","action":"real local key, exact manuscript claim, quote, locator, reviewed=true","expect":"passed structural mapping; explicit authenticity/coverage limitations"}
+]

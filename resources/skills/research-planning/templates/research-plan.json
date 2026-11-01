@@ -1,0 +1,16 @@
+{
+  "question": "TODO",
+  "populationOrTask": "TODO",
+  "knownEvidence": [],
+  "unverifiedAssumptions": [],
+  "hypothesis": "TODO: falsifiable direction and estimand",
+  "nullHypothesis": "TODO",
+  "samplingUnit": "TODO",
+  "primaryMetric": {"name":"TODO","unit":"TODO","practicalThreshold":"TODO"},
+  "baselines": [],
+  "dataPermissionAndEthics": "TODO: do not assume approval",
+  "budgetCeiling": "TODO",
+  "milestones": [{"deliverable":"smoke test","owner":"TODO","input":"TODO","acceptance":"TODO","stopCondition":"TODO"}],
+  "negativeResultValue": "TODO",
+  "userApproval": false
+}

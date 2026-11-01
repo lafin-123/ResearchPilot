@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skill": "research-gap",
+  "status": "draft",
+  "inputRequirement": "有出处的证据矩阵",
+  "expectedOutput": "可检验缺口与反证清单",
+  "limitation": "不能以没搜到断言无人研究",
+  "decisions": [
+    {
+      "step": "分离已证实与未知",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "检索反例和相邻领域",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "提出最小可检验问题",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "query": "",
+      "platform": "",
+      "retrievedAt": "",
+      "sourceId": "",
+      "inclusionDecision": "",
+      "exclusionReason": "",
+      "coverageGap": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

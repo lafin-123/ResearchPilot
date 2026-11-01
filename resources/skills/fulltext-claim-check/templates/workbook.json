@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "skill": "fulltext-claim-check",
+  "status": "draft",
+  "inputRequirement": "稿件主张及可读取全文",
+  "expectedOutput": "原句到全文证据映射",
+  "limitation": "缺失全文或页码不可伪造支持关系",
+  "decisions": [
+    {
+      "step": "逐句拆出可核验主张",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "在全文定位原文及章节",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    },
+    {
+      "step": "区分直接支持间接支持和不支持",
+      "evidence": "",
+      "decision": "",
+      "unresolved": []
+    }
+  ],
+  "records": [
+    {
+      "claim": "",
+      "sourceId": "",
+      "sourceVersion": "",
+      "coverage": "",
+      "locator": "",
+      "sourceQuote": "",
+      "assessment": "",
+      "unresolved": ""
+    }
+  ],
+  "assumptions": [],
+  "blockers": [],
+  "actualOperations": [],
+  "humanReviewRequired": true
+}

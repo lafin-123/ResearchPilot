@@ -1,0 +1,4 @@
+condition,implementation,version,tuning_budget,seeds,primary_metric,secondary_metrics,status
+naive,,none,0,5,,
+published_baseline,,as_reported,paper budget,5,,
+proposed,,matched,5,5,,
