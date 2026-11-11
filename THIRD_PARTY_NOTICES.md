@@ -29,6 +29,16 @@ React, lucide-react, CodeMirror, ssh2, mammoth, docx, js-yaml, JSZip, PDF.js (`p
 
 The generated `resources/mcp/server.mjs` contains bundled third-party SDK code and retains its generated legal comments. The ResearchPilot noncommercial license applies only to the project's original material, not to third-party code inside generated bundles. Rebuild the bundle with `npm run build:mcp`; do not remove its third-party notices.
 
+## lieflat-less-ai-tone
+
+- Author: shiujan
+- Source: https://github.com/larashero3-dotcom/lieflat-less-ai-tone
+- Pinned commit: `53160078a04926d98de57a233549612d1b89bdc9`
+- License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
+- Role: bundled writing rules, local detection and comparison scripts, and semantic review criteria.
+
+Original files and the full license are retained in `resources/skills/lieflat-less-ai-tone/` (installed as `skills/lieflat-less-ai-tone/`). ResearchPilot adds academic adaptation, a revision template and regression cases; see that directory's `ATTRIBUTION.md`. These adaptations retain CC BY-NC 4.0. Native integration does not imply the original author's endorsement or independent reproduction of the upstream corpus research.
+
 ## ResearchPilot original material
 
 ResearchPilot's original code and resources are offered under PolyForm Noncommercial 1.0.0. See `LICENSE.md` and `NOTICE.md`. This does not change or restrict licenses granted directly by third-party copyright holders.

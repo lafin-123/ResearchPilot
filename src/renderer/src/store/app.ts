@@ -51,6 +51,7 @@ interface AppState {
   activeChatId: string
   messages: ChatMessage[]
   modelSelection: ModelSelection
+  modelChanging: boolean
   assistantOpen: boolean
   approvals: ApprovalRequest[]
   composerDraft: string
@@ -96,6 +97,7 @@ let initPromise: Promise<void> | undefined
 let projectEpoch = 0
 let chatEpoch = 0
 let bootstrapEpoch = 0
+const modelEpochs = new Map<string, number>()
 
 export const useAppStore = create<AppState>()((set, get) => ({
   ready: false,
@@ -113,6 +115,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
   activeChatId: '',
   messages: [],
   modelSelection: { providerId: '', modelId: '' },
+  modelChanging: false,
   assistantOpen: false,
   approvals: [],
   composerDraft: '',
@@ -181,6 +184,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
       projects: bootstrap.projects,
       providers: bootstrap.providers,
       sshHosts: bootstrap.sshHosts,
+      ...(!state.activeChatId && !state.modelChanging ? { modelSelection: { providerId: bootstrap.settings.defaultProviderId, modelId: bootstrap.settings.defaultModelId } } : {}),
       ...(projectChanged ? {
         activeProjectId: bootstrap.activeProjectId,
         activeChatId: '', chats: [], messages: [], streaming: null, usage: null, approvals: [],
@@ -237,7 +241,8 @@ export const useAppStore = create<AppState>()((set, get) => ({
     if (!projectId || get().projectLoading) return
     const context = projectEpoch
     const request = ++chatEpoch
-    const current = (): boolean => context === projectEpoch && request === chatEpoch && projectId === get().activeProjectId
+    const modelVersion = modelEpochs.get(projectId) ?? 0
+    const current = (): boolean => context === projectEpoch && request === chatEpoch && modelVersion === (modelEpochs.get(projectId) ?? 0) && projectId === get().activeProjectId
     try {
       const chats = await api.chat.list(projectId)
       if (!current()) return
@@ -283,15 +288,16 @@ export const useAppStore = create<AppState>()((set, get) => ({
 
   newChat: async () => {
     const projectId = get().activeProjectId
-    if (!projectId || get().projectLoading) return false
+    if (!projectId || get().projectLoading || get().modelChanging || get().pendingSend || isRunning(get().agentState)) return false
     const context = projectEpoch
     const request = ++chatEpoch
     const current = (): boolean => context === projectEpoch && request === chatEpoch && projectId === get().activeProjectId
+    set({ pendingSend: { projectId, chatId: get().activeChatId } })
     try {
       const selection = get().modelSelection
       let chat = await api.chat.create(projectId)
       if (!current()) return false
-      if (selection.providerId && selection.modelId) {
+      if (selection.providerId && selection.modelId && (chat.providerId !== selection.providerId || chat.modelId !== selection.modelId)) {
         chat = await api.chat.setModel(chat.id, selection.providerId, selection.modelId)
       }
       if (!current()) return false
@@ -308,12 +314,12 @@ export const useAppStore = create<AppState>()((set, get) => ({
     } catch (error) {
       if (current()) toast.error(formatError(error))
       return false
-    }
+    } finally { set({ pendingSend: null }) }
   },
 
   send: async (text: string, attachments?: AttachmentDraft[], newConversation = false) => {
     const initial = get()
-    if (initial.pendingSend || initial.projectLoading || isRunning(initial.agentState)) return false
+    if (initial.pendingSend || initial.modelChanging || initial.projectLoading || isRunning(initial.agentState)) return false
     if (!text.trim() && !attachments?.length) return false
     const projectId = initial.activeProjectId
     if (!projectId) {
@@ -398,17 +404,35 @@ export const useAppStore = create<AppState>()((set, get) => ({
   },
 
   setChatModel: async (providerId: string, modelId: string) => {
-    set({ modelSelection: { providerId, modelId } })
-    const chatId = get().activeChatId
-    if (!chatId) return
+    const initial = get()
+    if (initial.modelChanging || initial.pendingSend || initial.projectLoading || isRunning(initial.agentState)) return
+    const provider = initial.providers.find(item => item.id === providerId)
+    if (!provider?.hasApiKey || !provider.models.some(item => item.id === modelId)) {
+      toast.error('请选择已配置凭据的提供方与有效模型。')
+      return
+    }
+    const { activeChatId: chatId, activeProjectId: projectId } = initial
+    const context = projectEpoch
+    set({ modelChanging: true })
     try {
-      const chat = await api.chat.setModel(chatId, providerId, modelId)
-      set((state) => ({
-        chats: state.chats.map((item) => (item.id === chat.id ? chat : item))
-      }))
+      if (chatId) {
+        const chat = await api.chat.setModel(chatId, providerId, modelId)
+        modelEpochs.set(projectId, (modelEpochs.get(projectId) ?? 0) + 1)
+        set(state => ({
+          chats: state.chats.map(item => item.id === chat.id && item.projectId === chat.projectId ? chat : item),
+          ...(state.activeProjectId === projectId && state.activeChatId === chatId ? { modelSelection: { providerId: chat.providerId, modelId: chat.modelId } } : {})
+        }))
+      } else {
+        const settings = await api.settings.update({ defaultProviderId: providerId, defaultModelId: modelId })
+        set(state => ({
+          settings,
+          bootstrap: state.bootstrap ? { ...state.bootstrap, settings } : state.bootstrap,
+          ...(context === projectEpoch && state.activeProjectId === projectId && !state.activeChatId ? { modelSelection: { providerId, modelId } } : {})
+        }))
+      }
     } catch (error) {
       toast.error(formatError(error))
-    }
+    } finally { set({ modelChanging: false }) }
   },
 
   respondApproval: async (id, approved, remember) => {
@@ -481,6 +505,8 @@ export const useAppStore = create<AppState>()((set, get) => ({
         if (event.projectId !== get().activeProjectId) break
         const chat = get().chats.find((item) => item.dshSessionId === event.sessionId && item.projectId === event.projectId)
         if (!chat || chat.id !== get().activeChatId) break
+        const status = get().agentState
+        if (status?.sessionId === event.sessionId && ['idle', 'stopped', 'error'].includes(status.status)) break
         const frame = event.frame as { type?: string; chunk?: Record<string, unknown> }
         if (frame.type === 'start') {
           set({ streaming: { sessionId: event.sessionId, chatId: chat.id, text: '', reasoning: '', active: true } })

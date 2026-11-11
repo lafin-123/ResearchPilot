@@ -14,7 +14,6 @@ files:
   - "!node_modules/@deepseek-ai/dsh-experimental-speech-to-text-sensevoice/**"
   - "!node_modules/sherpa-onnx-*/**"
   - "!node_modules/node-pty/prebuilds/win32-arm64/**"
-  - "!node_modules/node-pty/prebuilds/linux-*/**"
   - "!node_modules/node-pty/prebuilds/darwin-*/**"
 extraResources:
   - from: resources/skills
@@ -31,12 +30,25 @@ extraResources:
     to: LICENSE.md
   - from: NOTICE.md
     to: NOTICE.md
+linux:
+  target:
+    - target: deb
+      arch:
+        - x64
+    - target: tar.gz
+      arch:
+        - x64
+  executableName: researchpilot
+  icon: resources/icon.png
+  category: Science
+  maintainer: ResearchPilot maintainers <lafin-123@users.noreply.github.com>
+  artifactName: ${productName}-${version}-linux-${arch}.${ext}
 win:
   target:
     - target: nsis
       arch:
         - x64
-  artifactName: ${productName}-${version}-setup.${ext}
+  artifactName: ${productName}-${version}-windows-${arch}-setup.${ext}
   icon: resources/icon.png
 nsis:
   oneClick: false

@@ -1,14 +1,28 @@
 # 安装与配置 ResearchPilot
 
-你可以直接安装 Windows 版，也可以从源码运行。第一次使用推荐安装包，开发和定制功能时再选择源码方式。
+你可以直接安装 Windows 或 Linux 版，也可以从源码运行。第一次使用推荐安装包，开发和定制功能时再选择源码方式。
 
 ## 一、安装桌面版
 
 ### 下载安装包
 
-打开 [最新版本下载页](https://github.com/lafin-123/ResearchPilot/releases/latest)，下载 `ResearchPilot-<版本>-setup.exe`，按向导选择安装目录。
+### Windows x64
 
-当前发布平台是 Windows x64。安装包自带应用运行环境，**使用安装包无需安装 Node.js**。安装程序尚未签名，Windows 可能显示未知发布者提示；发布页提供 SHA-256 文件，可用于核对下载完整性。
+下载 `ResearchPilot-<版本>-windows-x64-setup.exe`，按向导选择安装目录。安装包自带应用运行环境，无需安装 Node.js。安装程序尚未签名，Windows 可能显示未知发布者提示；请核对随包提供的 SHA-256。
+
+### Linux x64
+
+Debian / Ubuntu 系统使用 `ResearchPilot-<版本>-linux-x64.deb`。建议 Ubuntu 22.04 或更新版本，以及已登录、解锁的桌面密钥环。
+
+```bash
+sudo apt install ./ResearchPilot-0.9.0-linux-x64.deb
+```
+
+安装后从应用菜单启动 **ResearchPilot**。其他 glibc 桌面发行版可使用 `.tar.gz` 解压版；解压后从自己的用户账户运行 `researchpilot`，不要以 root 启动，也不要为绕过启动错误添加 `--no-sandbox`。
+
+Linux 需要系统 GTK、NSS、GBM、ALSA 和 Secret Service / KWallet 等桌面组件。`.deb` 会声明依赖；解压版由系统提供这些依赖。密钥环不可用或回退为 `basic_text` 时，应用拒绝保存模型和 SSH 密钥。部分发行版限制非特权用户命名空间，须按发行版的 Chromium/Electron 安全策略配置沙箱，不建议关闭沙箱。
+
+两个平台均不内置 Python 或 LaTeX。论文润色的脚本检查与实验运行需要 Python 3.10+；基础文献、笔记与稿件管理可以先使用。Linux 终端中的 `research` 命令桥另需 Node.js 24+ 和 curl；应用内原生工具不依赖单独安装的 Node.js。
 
 ### 第一次打开
 
@@ -27,7 +41,7 @@
 
 ### 添加提供方
 
-1. 打开 **模型与设置 → 模型与 API → 添加提供方**。
+1. 打开 **设置 → 模型与偏好 → 模型与 API → 添加提供方**。
 2. 选择服务商预设，或使用自定义兼容 API。
 3. 填写 **基础 URL** 和 **API Key**，核对协议。
 4. 点击 **获取上游模型**，勾选要使用的模型。
@@ -71,19 +85,19 @@ model-id | 显示名称
 python --version
 ```
 
-然后在 **模型与设置 → 运行环境 → Python 解释器路径** 中填写实际 `python.exe` 路径并保存。使用虚拟环境时，填写虚拟环境中的解释器路径即可。
+然后在 **设置 → 模型与偏好 → 运行环境 → Python 解释器路径** 中填写实际 `python.exe` 路径并保存。使用虚拟环境时，填写虚拟环境中的解释器路径即可。
 
 实验需要的 numpy、pandas、matplotlib 等依赖，安装到你选用的 Python 环境中。完整研究流程使用这里明确配置的解释器，因此即使系统里已经检测到 Python 或 uv，也请保存一次解释器路径。
 
 ### 启用 MCP 工具
 
-打开 **MCP 工具连接**，启用并测试三个内置服务：
+打开 **设置 → 工具连接**，启用并测试三个内置服务：
 
 - **文献与证据**：文献检索、来源读取、PDF 全文分页和作者指南获取。
 - **文稿与表达**：读取稿件、表达审阅和文稿写入。
 - **实验与图表**：实验登记与执行、运行产物、结构化图表。
 
-MCP 是助手与项目工具之间的连接层。连接测试使用本地服务，不调用模型。配置完成后，**使用准备检查** 页面会汇总模型、Python、工具和项目目录状态。
+MCP 是助手与项目工具之间的连接层。连接测试使用本地服务，不调用模型。配置完成后，**设置 → 环境检查** 页面会汇总模型、Python、工具和项目目录状态。
 
 ### LaTeX 和远程算力
 
@@ -96,7 +110,7 @@ MCP 是助手与项目工具之间的连接层。连接测试使用本地服务�
 1. 创建项目，填写名称和研究目标。
 2. 在 **文献资料** 中搜索来源、添加 DOI、导入 BibTeX 或关联 PDF。
 3. 用 **研究笔记** 记录问题、阅读摘记和实验观察。
-4. 打开 **科研技能**，按类别选择任务；目标、输入与输出的补充字段可以直接跳过。
+4. 打开 **助手 → 技能库**，按类别选择任务；目标、输入与输出的补充字段可以直接跳过。
 5. 点击 **放入助手草稿**，检查内容后发送。
 
 如果希望连贯推进，在工作台输入研究主题，点击 **一键开始研究**。流程会依次保留文献、方案、实验、分析、图表和稿件产物。执行代码或外部操作时，按界面提示检查并确认。
@@ -109,7 +123,7 @@ MCP 是助手与项目工具之间的连接层。连接测试使用本地服务�
 
 ### 准备环境
 
-安装 Node.js 24+ 和 Git，使用 Windows 桌面环境。Node.js 版本可这样查看：
+安装 Node.js 24+ 和 Git，使用 Windows 或 Linux 桌面环境。Node.js 版本可这样查看：
 
 ```bash
 node --version
@@ -151,6 +165,12 @@ npm run preview
 
 ResearchPilot 由 Electron 主进程、预加载层和 React 界面组成。部署单位是桌面应用，`out/renderer` 需与主进程一起运行。
 
+### 真实模型验证脚本
+
+真实模型脚本不会使用内置私人测试端点。运行前需在当前终端设置 `RESEARCHPILOT_API_KEY`、`RESEARCHPILOT_API_BASE` 和 `RESEARCHPILOT_MODEL`，分别提供自己的凭据、兼容端点和准确模型 ID；这些脚本会产生实际 API 调用费用，不属于普通测试必需步骤。网关探测脚本另使用 `RESEARCHPILOT_API_ORIGIN`。阅读验证还需 `RESEARCHPILOT_REFERENCE_DB` 指向 `test-results` 内自己准备的隔离文献数据库，只读复用参考文献。
+
+不要将这些值提交到仓库。普通桌面回归使用本地模拟模型，无需真实凭据。
+
 ### 运行检查
 
 ```bash
@@ -167,7 +187,7 @@ npm run test:e2e
 
 端到端测试会在 Windows 桌面启动真实应用，并在 `test-results/` 中创建独立测试工作区。日常安装与使用不需要运行测试。
 
-## 六、构建 Windows 安装包
+## 六、构建安装包
 
 在项目根目录完成依赖安装后，运行：
 
@@ -175,7 +195,7 @@ npm run test:e2e
 npm run package:win
 ```
 
-安装程序输出到 `release/`，命名为 `ResearchPilot-<版本>-setup.exe`。
+安装程序输出到 `release/`，命名为 `ResearchPilot-<版本>-windows-x64-setup.exe`。
 
 只需要解包后的应用目录时，使用：
 
@@ -183,7 +203,27 @@ npm run package:win
 npm run package:dir
 ```
 
-打包过程会下载 Electron Builder 工具。若某个原生依赖需要本机编译，再根据错误提示安装 Visual Studio C++ 构建工具及相应环境。许可证和第三方声明会随应用打包。
+Linux x64 的 `.deb` 和 `.tar.gz` 使用独立依赖暂存目录构建，避免将 Windows 原生模块误打进 Linux 包：
+
+```bash
+npm run package:linux
+```
+
+此命令会下载 Linux Electron 和所需的 Linux x64 生产依赖，检查关键 ELF 二进制、资源和归档权限后生成安装包。Windows 主机上的交叉构建只证明产物结构正确，不能代替 Linux 桌面运行验证。
+
+打包过程会下载 Electron Builder 工具。若某个原生依赖需要本机编译，再根据错误提示安装对应平台的编译工具。许可证和第三方声明会随应用打包。
+
+发布前还应检查助手运行依赖，而不只是窗口能否打开。DSH 的部分运行契约由上游声明为 peer，本项目将已使用的版本显式固定到生产依赖，避免打包器漏收。可对解包后的 Windows 应用运行依赖闭包审计和隔离的本地模拟上游测试：
+
+```bash
+node --experimental-import-meta-resolve scripts/validate-packaged-dependencies.mjs --app-root release/win-unpacked/resources/app --compare-root .
+```
+
+```bash
+node scripts/smoke-packaged-agent.mjs release/win-unpacked/ResearchPilot.exe
+```
+
+路径需按本次实际输出目录调整。第二条命令不执行安装向导，使用独立数据目录和本地模拟模型，检查真实 SDK 启动、流式请求与回复保存。
 
 ## 七、备份与升级
 
@@ -201,6 +241,7 @@ npm run package:dir
 | 依赖或 Electron 下载失败 | 检查当前网络和代理；若镜像不可达，可改用官方 registry/下载源，保持 TLS 校验开启 |
 | npm 出现 `electron_mirror` 配置提示 | 先查看安装退出码与 Electron 下载结果，提示本身不等于失败 |
 | `node:sqlite` 不存在 | 更新到 Node.js 24+，重新打开终端确认版本 |
+| 安装后助手报 `ERR_MODULE_NOT_FOUND`，包含 `cordis-plugin-group` | 旧安装包漏收了助手运行依赖，需要更新完整安装包；不要在用户数据或安装目录中手动安装 npm 包。发布前应运行打包依赖审计与实际助手回复测试。 |
 | 获取不到模型列表 | 核对 URL、协议、Key；服务没有列表接口时使用手动模型入口 |
 | 模型返回 401 / 403 / 429 | 分别检查凭据、模型权限、额度和限流状态 |
 | Python 检查失败 | 选择实际解释器，检查版本和所需依赖，避开 Microsoft Store 的占位程序 |

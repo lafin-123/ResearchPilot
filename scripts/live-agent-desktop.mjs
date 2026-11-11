@@ -5,13 +5,16 @@ import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { spawnSync } from 'node:child_process'
 import { _electron as electron } from 'playwright-core'
+import { navigateWorkspace } from './workspace-navigation.mjs'
 
 const require = createRequire(import.meta.url)
 const root = resolve(import.meta.dirname, '..')
 const key = process.env.RESEARCHPILOT_API_KEY?.trim()
 if (!key) throw new Error('RESEARCHPILOT_API_KEY must be supplied in environment, never saved in code.')
-const model = process.env.RESEARCHPILOT_MODEL || 'gpt-5.6-sol'
-const baseUrl = process.env.RESEARCHPILOT_API_BASE || 'https://nova1api.duckdns.org/v1'
+const model = process.env.RESEARCHPILOT_MODEL?.trim()
+if (!model) throw new Error('RESEARCHPILOT_MODEL must be supplied in environment for this live inference test.')
+const baseUrl = process.env.RESEARCHPILOT_API_BASE?.trim()
+if (!baseUrl) throw new Error('RESEARCHPILOT_API_BASE must be supplied in environment for this live inference test.')
 const results = join(root, 'test-results')
 await mkdir(results, { recursive: true })
 const runDir = await mkdtemp(join(results, 'live-agent-'))
@@ -114,7 +117,7 @@ try {
   assert.ok(figures.some((f) => f.pptxPath && f.sourcePath))
   report.figures = figures.map((f) => ({ id: f.id, name: f.name, sourcePath: f.sourcePath, pptxPath: f.pptxPath }))
   record('Real agent created JSON, SVG and editable PPT from executed measurements')
-  await page.reload(); await page.waitForSelector('.sidebar'); await page.locator('.sidebar a[href="#/figures"]').click()
+  await page.reload(); await page.waitForSelector('.sidebar'); await navigateWorkspace(page, '/figures')
   await page.getByText('Monte Carlo simulation', { exact: true }).first().waitFor()
   await page.screenshot({ path: join(runDir, 'live-result.png') })
   report.ok = true

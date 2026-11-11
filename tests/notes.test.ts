@@ -246,7 +246,7 @@ test('append-only migration upgrades an existing database and project deletion c
     const version = f.db.scalar<number>('PRAGMA user_version')!
     f.db.run('INSERT INTO app_settings (key, value_json) VALUES (?, ?)', 'sentinel', '"keep me"')
     // Notes were introduced in migration 5. Later independent tables must also be removed before replaying newer migrations.
-    f.db.raw.exec('DROP TABLE IF EXISTS pdf_annotations; DROP TABLE reference_reading_drafts; DROP TABLE note_links; DROP TABLE project_notes; PRAGMA user_version = 4')
+    f.db.raw.exec('DROP TABLE IF EXISTS paper_context_active; DROP TABLE IF EXISTS paper_context_sources; DROP TABLE IF EXISTS paper_memories; DROP TABLE IF EXISTS research_tasks; DROP TABLE IF EXISTS research_workspaces; DROP TABLE IF EXISTS pdf_annotations; DROP TABLE reference_reading_drafts; DROP TABLE note_links; DROP TABLE project_notes; PRAGMA user_version = 4')
     upgraded = new Db(f.file)
     assert.equal(upgraded.scalar<number>('PRAGMA user_version'), version)
     assert.equal(upgraded.scalar<string>('SELECT value_json FROM app_settings WHERE key = ?', 'sentinel'), '"keep me"')

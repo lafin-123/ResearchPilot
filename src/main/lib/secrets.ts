@@ -4,7 +4,7 @@ const PREFIX = 'enc:v1:'
 
 export function isSecretStorageAvailable(): boolean {
   try {
-    return safeStorage.isEncryptionAvailable()
+    return safeStorage.isEncryptionAvailable() && (process.platform !== 'linux' || safeStorage.getSelectedStorageBackend() !== 'basic_text')
   } catch {
     return false
   }

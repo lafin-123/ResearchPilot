@@ -266,6 +266,7 @@ export interface ProviderInput {
   apiKey?: string
   models: ModelInfo[]
   isDefault?: boolean
+  defaultModelId?: string
 }
 
 export interface SshHost {

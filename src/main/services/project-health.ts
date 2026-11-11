@@ -110,7 +110,7 @@ export class ProjectHealthService {
       // ensureProjectLayout writes only these fixed managed targets. Preflight existing
       // entries so that a junction/symlink cannot redirect startup into another directory.
       for (const dir of PROJECT_DIRS) assertProjectPathSafe(project, dir, 'directory')
-      for (const file of ['AGENTS.md', '.research/manifest.json', '.research/bridge.json', '.research/bin/research-cli.ps1', '.research/bin/research.cmd', '.research/bin/research.sh']) {
+      for (const file of ['AGENTS.md', '.research/manifest.json', '.research/bridge.json', '.research/bin/research-cli.ps1', '.research/bin/research.cmd', '.research/bin/research.sh', ...(process.platform !== 'win32' ? ['.research/bin/research'] : [])]) {
         assertProjectPathSafe(project, file, 'file')
       }
       this.prepareProject(project)

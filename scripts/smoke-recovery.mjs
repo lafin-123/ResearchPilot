@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { _electron as electron } from 'playwright-core'
+import { navigateWorkspace } from './workspace-navigation.mjs'
 
 const require = createRequire(import.meta.url)
 const root = resolve(import.meta.dirname, '..')
@@ -21,7 +22,7 @@ async function launch() {
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForSelector('.research-home', { timeout: 60000 })
 }
-const navigate = async path => { await page.locator(`.sidebar a[href="#${path}"]`).click() }
+const navigate = path => navigateWorkspace(page, path)
 try {
   await launch()
   const initial = await page.evaluate(() => window.researchpilot.bootstrap())

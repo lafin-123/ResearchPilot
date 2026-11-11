@@ -1,4 +1,4 @@
-import type { AppSettings } from '@shared/types'
+import type { AppSettings, ModelInfo } from '@shared/types'
 import { normalizeClarification } from '../../shared/research-interaction'
 import { normalizeAgentRoles } from '../../shared/agent-roles'
 import type { Db } from '../lib/db'
@@ -36,6 +36,16 @@ export class SettingsService {
 
   update(patch: Partial<AppSettings>): AppSettings {
     const next = { ...this.get(), ...patch }
+    const changesDefault = Object.hasOwn(patch, 'defaultProviderId') || Object.hasOwn(patch, 'defaultModelId')
+    if (changesDefault) {
+      if (typeof next.defaultProviderId !== 'string' || typeof next.defaultModelId !== 'string') throw new Error('默认提供方与默认模型必须是有效 ID。')
+      if (next.defaultProviderId || next.defaultModelId) {
+        if (!next.defaultProviderId || !next.defaultModelId) throw new Error('请同时选择默认提供方与默认模型，或同时清空。')
+        const provider = this.db.get<{ models_json: string }>('SELECT models_json FROM providers WHERE id = ?', next.defaultProviderId)
+        if (!provider) throw new Error('默认模型的提供方不存在。')
+        if (!parseJson<ModelInfo[]>(provider.models_json, []).some(model => model.id === next.defaultModelId)) throw new Error('默认模型不在提供方的已选模型列表中。')
+      }
+    }
     next.researchClarification = normalizeClarification(next.researchClarification)
     next.agentRoleModels = normalizeAgentRoles(next.agentRoleModels)
     if (!next.workspaceRoot || typeof next.workspaceRoot !== 'string') next.workspaceRoot = defaultWorkspaceRoot()
@@ -47,6 +57,7 @@ export class SettingsService {
       SETTINGS_KEY,
       JSON.stringify(next)
     )
+    if (changesDefault) this.db.run('UPDATE providers SET is_default = CASE WHEN id = ? THEN 1 ELSE 0 END', next.defaultProviderId)
     return next
   }
 

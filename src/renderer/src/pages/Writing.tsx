@@ -1,81 +1,117 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, FilePlus2, FileText, Import, Upload, Workflow } from 'lucide-react'
+import { FilePlus2, FileText, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import type { DocumentFormat, DocumentRecord } from '@shared/types'
 import { api, formatError, relativeTime } from '../lib/api'
 import { useAppStore } from '../store/app'
 import { AgentEntry } from '../components/AgentEntry'
-import { Badge, Button, EmptyState, Field, Input, Modal, PageHeader } from '../components/Ui'
+import { PaperContextPanel } from '../components/PaperContextPanel'
+import { ManuscriptReader } from '../components/ManuscriptReader'
+import { Button, EmptyState, Field, Input, Modal, PageHeader, Select } from '../components/Ui'
+import './writing-workspace.css'
+
+const selectedManuscripts = new Map<string, string>()
 
 export function WritingPage(): ReactNode {
   const navigate = useNavigate()
   const activeProjectId = useAppStore((state) => state.activeProjectId)
   const [documents, setDocuments] = useState<DocumentRecord[]>([])
   const [loading, setLoading] = useState(false)
+  const [listError, setListError] = useState('')
   const [createOpen, setCreateOpen] = useState(false)
   const [format, setFormat] = useState<DocumentFormat>('docx')
   const [title, setTitle] = useState('')
   const [busy, setBusy] = useState(false)
+  const [contextBusy, setContextBusy] = useState(false)
+  const [selectedId, setSelectedId] = useState('')
+  const loadVersion = useRef(0)
+  const actionVersion = useRef(0)
+  const mounted = useRef(true)
+  const currentProject = (projectId: string): boolean => mounted.current && useAppStore.getState().activeProjectId === projectId
 
   const load = async (): Promise<void> => {
     if (!activeProjectId) return
+    const projectId = activeProjectId
+    const version = ++loadVersion.current
     setLoading(true)
+    setListError('')
     try {
-      setDocuments(await api.documents.list(activeProjectId))
+      const result = await api.documents.list(projectId)
+      if (currentProject(projectId) && version === loadVersion.current) setDocuments(result)
     } catch (error) {
-      toast.error(formatError(error))
+      if (currentProject(projectId) && version === loadVersion.current) setListError(formatError(error))
     } finally {
-      setLoading(false)
+      if (currentProject(projectId) && version === loadVersion.current) setLoading(false)
     }
   }
 
   useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false; loadVersion.current++; actionVersion.current++ }
+  }, [])
+
+  useEffect(() => {
+    setDocuments([])
+    setListError('')
+    setCreateOpen(false)
+    setBusy(false)
+    setContextBusy(false)
+    setSelectedId(selectedManuscripts.get(activeProjectId) ?? '')
+    if (!activeProjectId) { setLoading(false); return }
     void load()
+    return () => { actionVersion.current++; loadVersion.current++ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProjectId])
 
   const create = async (): Promise<void> => {
     if (!activeProjectId || !title.trim()) return
+    const action = actionVersion.current
+    const current = (): boolean => action === actionVersion.current && currentProject(activeProjectId)
     setBusy(true)
     try {
       const document = await api.documents.create({ projectId: activeProjectId, title: title.trim(), format })
+      if (!current()) return
       setCreateOpen(false)
       setTitle('')
       await load()
-      navigate(`/write/${document.id}`)
+      if (current()) navigate(`/write/${document.id}`)
     } catch (error) {
-      toast.error(formatError(error))
+      if (current()) toast.error(formatError(error))
     } finally {
-      setBusy(false)
+      if (current()) setBusy(false)
     }
   }
 
   const importFile = async (): Promise<void> => {
     if (!activeProjectId) return
+    const action = actionVersion.current
+    const current = (): boolean => action === actionVersion.current && currentProject(activeProjectId)
     setBusy(true)
     try {
       const document = await api.documents.import(activeProjectId)
-      if (document) {
+      if (document && current()) {
         await load()
-        navigate(`/write/${document.id}`)
+        if (current()) navigate(`/write/${document.id}`)
       }
     } catch (error) {
-      toast.error(formatError(error))
+      if (current()) toast.error(formatError(error))
     } finally {
-      setBusy(false)
+      if (current()) setBusy(false)
     }
   }
 
-  const docx = documents.filter((document) => document.format === 'docx')
-  const latex = documents.filter((document) => document.format === 'latex')
+  const selected = documents.find(document => document.id === selectedId && document.projectId === activeProjectId) ?? documents.find(document => document.projectId === activeProjectId)
+  const chooseDocument = (id: string): void => {
+    selectedManuscripts.set(activeProjectId, id)
+    setSelectedId(id)
+  }
 
   return (
-    <div className="page">
+    <div className="page writing-desk">
       <PageHeader
-        eyebrow="MANUSCRIPTS"
-        title="论文工作台"
-        subtitle="一个项目可以维护多份文稿。DOCX 适合与合作者往返修改，LaTeX 适合精确排版与投稿。"
+        title="写作"
+        subtitle="围绕当前稿件阅读、修改，让研究记忆在旁边提供依据。"
         actions={(
           <>
             <Button onClick={() => navigate('/writing-quality')}><FileText />检查与修订</Button>
@@ -86,102 +122,35 @@ export function WritingPage(): ReactNode {
         )}
       />
 
-      <AgentEntry
-        placeholder="例如：基于已有 run 写 Methods 与 Results，并核对每个数字"
+      {listError ? <div className="writing-list-error" role="alert"><h2>稿件列表暂时无法读取</h2><p>{listError}</p><Button onClick={() => void load()} disabled={loading}>重新读取稿件</Button></div> : null}
+      {documents.length === 0 && !loading && !listError ? <div className="writing-empty-state">
+        <EmptyState icon={<FileText />} title="从一份稿件开始" text="导入已有论文，或创建新稿件。正文在这里，研究记忆在旁边。" action={<Button variant="primary" onClick={() => { setFormat('docx'); setCreateOpen(true) }}>创建第一份文稿</Button>} />
+        <Button variant="ghost" onClick={() => navigate('/pipeline')}>先从研究流程开始</Button>
+      </div> : listError && !documents.length ? null : <>
+        <div className="writing-document-bar">
+          <label className="writing-document-choice"><span>当前稿件</span><Select aria-label="当前稿件" value={selected?.id ?? ''} disabled={loading || contextBusy} onChange={event => chooseDocument(event.target.value)}>
+            {!selected ? <option value="">{loading ? '读取稿件…' : '选择稿件'}</option> : null}
+            {documents.map(document => <option key={document.id} value={document.id}>{document.title} · {document.format === 'docx' ? 'Word' : 'LaTeX'}</option>)}
+          </Select></label>
+          <span className="writing-document-meta">{selected ? `${selected.wordCount.toLocaleString()} 词 · ${relativeTime(selected.updatedAt)}` : ''}</span>
+        </div>
+        {selected ? <div className="writing-desk-layout">
+          <ManuscriptReader key={`${activeProjectId}:${selected.id}`} projectId={activeProjectId} document={selected}/>
+          <aside className="writing-context-rail" aria-label="研究辅助栏"><PaperContextPanel key={activeProjectId} projectId={activeProjectId} documents={documents} documentId={selected.id} onDocumentChange={chooseDocument} onBusyChange={setContextBusy}/></aside>
+        </div> : <p className="small muted" role="status">正在读取稿件…</p>}
+      </>}
+      <details className="writing-assistant-entry"><summary>和助手讨论这篇论文</summary><AgentEntry
+        placeholder="例如：核对结果章节的数字与证据是否一致"
         suggestions={[
-          { label: '生成论文初稿', prompt: '请基于当前项目的实验 run 与文献库生成论文初稿，先写 Methods 和 Results，并确保每个性能数字都能追溯到 run ID。' },
-          { label: '审稿体检', prompt: '请以严格审稿人的标准检查当前文稿：不受支持的论断、缺失引用、不可复现细节与图表问题。' }
+          { label: '准备章节草稿', prompt: '请先核对当前论文上下文和项目证据，再准备可审阅的章节草稿，不直接覆盖文稿。' },
+          { label: '审阅当前稿件', prompt: '请检查当前稿件的不受支持论断、引用缺口、方法与结果的一致性，逐项注明位置。' }
         ]}
-      />
-
-      {documents.length === 0 && !loading ? (
-        <div className="card">
-          <EmptyState
-            icon={<FileText />}
-            title="还没有文稿"
-            text="可以从空白模板开始，或让流水线在实验完成后自动生成论文初稿。"
-            action={<Button variant="primary" onClick={() => { setFormat('docx'); setCreateOpen(true) }}>创建第一份文稿</Button>}
-          />
-        </div>
-      ) : (
-        <div className="doc-columns">
-          <section className="card card-pad">
-            <div className="section-head">
-              <div>
-                <h2 className="section-title"><span className="doc-icon docx" style={{ width: 26, height: 30, display: 'inline-grid', fontSize: 8 }}>DOCX</span>Word 文稿</h2>
-                <div className="card-sub">所见即所得编辑，自动版本快照。</div>
-              </div>
-              <Badge tone="blue">{docx.length}</Badge>
-            </div>
-            <div className="doc-list">
-              {docx.map((document) => (
-                <button key={document.id} className="card doc-card" style={{ textAlign: 'left' }} onClick={() => navigate(`/write/${document.id}`)}>
-                  <div className="doc-icon docx">DOCX</div>
-                  <div className="list-main">
-                    <div className="list-title">{document.title}</div>
-                    <div className="list-sub">{document.wordCount.toLocaleString()} 词 · {relativeTime(document.updatedAt)}</div>
-                  </div>
-                  <ArrowRight size={15} className="muted" />
-                </button>
-              ))}
-              {docx.length === 0 ? <div className="small muted" style={{ padding: '14px 2px' }}>还没有 Word 文稿。</div> : null}
-            </div>
-          </section>
-
-          <section className="card card-pad">
-            <div className="section-head">
-              <div>
-                <h2 className="section-title"><span className="doc-icon latex" style={{ width: 26, height: 30, display: 'inline-grid', fontSize: 8 }}>TEX</span>LaTeX 文稿</h2>
-                <div className="card-sub">源码编辑、编译日志与 PDF 预览。</div>
-              </div>
-              <Badge tone="accent">{latex.length}</Badge>
-            </div>
-            <div className="doc-list">
-              {latex.map((document) => (
-                <button key={document.id} className="card doc-card" style={{ textAlign: 'left' }} onClick={() => navigate(`/write/${document.id}`)}>
-                  <div className="doc-icon latex">TEX</div>
-                  <div className="list-main">
-                    <div className="list-title">{document.title}</div>
-                    <div className="list-sub">{document.wordCount.toLocaleString()} 词 · {relativeTime(document.updatedAt)}</div>
-                  </div>
-                  <ArrowRight size={15} className="muted" />
-                </button>
-              ))}
-              {latex.length === 0 ? <div className="small muted" style={{ padding: '14px 2px' }}>还没有 LaTeX 文稿。</div> : null}
-            </div>
-          </section>
-        </div>
-      )}
-
-      <div className="card card-pad mt-6" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div className="empty-icon" style={{ margin: 0 }}><Workflow size={20} /></div>
-        <div className="grow">
-          <div className="card-title">实验完成后再生成论文</div>
-          <div className="card-sub">运行「实验优先」流水线，等结果与图表落盘后，智能体会复用同一套证据生成 DOCX 与 LaTeX。</div>
-        </div>
-        <Button variant="primary" onClick={() => navigate('/pipeline')}>打开流水线<ArrowRight size={14} /></Button>
-      </div>
+      /></details>
 
       {createOpen ? (
-        <Modal
-          title={format === 'docx' ? '新建 DOCX 文稿' : '新建 LaTeX 文稿'}
-          subtitle={format === 'docx' ? '适合与导师、合作者用 Word 往返修改。' : '适合精确排版、公式与投稿模板。'}
-          onClose={() => setCreateOpen(false)}
-          footer={(
-            <>
-              <Button onClick={() => setCreateOpen(false)}>取消</Button>
-              <Button variant="primary" disabled={busy || !title.trim()} onClick={() => void create()}>{busy ? '创建中…' : '创建文稿'}</Button>
-            </>
-          )}
-        >
-          <Field label="文稿标题">
-            <Input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} placeholder="例如：Long-context RAG under distribution shift" />
-          </Field>
-          <div className="row">
-            <button className={`btn ${format === 'docx' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFormat('docx')}>DOCX</button>
-            <button className={`btn ${format === 'latex' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFormat('latex')}>LaTeX</button>
-            <span className="small muted">会创建带基础章节结构的草稿。</span>
-          </div>
+        <Modal title={format === 'docx' ? '新建 DOCX 文稿' : '新建 LaTeX 文稿'} subtitle={format === 'docx' ? '适合与导师、合作者用 Word 往返修改。' : '适合精确排版、公式与投稿模板。'} onClose={() => setCreateOpen(false)} footer={<><Button onClick={() => setCreateOpen(false)}>取消</Button><Button variant="primary" disabled={busy || !title.trim()} onClick={() => void create()}>{busy ? '创建中…' : '创建文稿'}</Button></>}>
+          <Field label="文稿标题"><Input autoFocus value={title} onChange={event => setTitle(event.target.value)} placeholder="论文题目" /></Field>
+          <div className="row"><button className={`btn ${format === 'docx' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFormat('docx')}>DOCX</button><button className={`btn ${format === 'latex' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFormat('latex')}>LaTeX</button></div>
         </Modal>
       ) : null}
     </div>

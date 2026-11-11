@@ -13,6 +13,18 @@ Write the paper from the experiment log, not from imagination. The manuscript is
 
 Read stage artifacts with artifact_read and registered documents with manuscript_list/manuscript_read. Write the actual document via mcp__rp_writing__manuscript_write({id,markdown}); a missing id plus title creates a new DOCX after approval. Existing LaTeX IDs accept complete TeX source in markdown, but compilation is NOT performed and must remain explicitly unverified. No shell/CLI/generic writes. Put the agent-authored full Markdown source at exports/manuscript-source.md using project_artifact_write for audit traceability. Embed actual registered figure previews with standalone ![caption](figures/.../figure.svg), using returned project-relative paths; native document service resolves structured figures. Include exact numeric tables and uncertainty captions, retain editable PPTX separately. Create the claims map with project_artifact_write. Automated audits use agent-authored registered analysis/audit experiments and actual execution, never forged passed reports or human supportReviewed flags.
 
+## Academic tone review (takes precedence over legacy tone, script and revision instructions)
+
+For scientific writing and polishing, load the bundled `lieflat-less-ai-tone` skill by default and read `lieflat-less-ai-tone/references/academic-adaptation.md` (relative to the bundled skills directory, not this skill directory). Apply this academic adaptation before using the upstream rules; scientific meaning outranks stylistic targets.
+
+- Existing manuscripts: read the current version, diagnose and propose with located examples and reasons, then wait until the user accepts the proposal before any revision. A general polishing request, minimal-question mode or pipeline auto-run is not acceptance of a proposal. Do not deliver or write a revised full manuscript before acceptance.
+- New drafts generated in the same writing task may undergo within-task tone check/revise. A manuscript from a prior stage or a retried task is not automatically a new draft. Preserve the original draft and traceable records of candidates, decisions/reasons, before/after changes and rechecks. Use distinct `exports/` artifact paths via approved `project_artifact_write` calls; do not overwrite originals or earlier records.
+- Preserve data, units, sample sizes, citations and attribution, negation, causal strength, uncertainty, terminology, formulas, code and document structure. Make only minimal, justified edits; retain uncertain passages and flag changes that would affect scientific meaning. Do not force colloquial language or target sentence-length statistics.
+- If Python is unavailable or detection did not successfully run, do not claim script detection or invent metrics. Disclose unperformed checks and label model-only observations. Distinguish actual script candidates, model judgments and human review; style statistics are heuristics, not an AI probability, proof of authorship or a promise of detector acceptance.
+- Loading a skill does not authorize shell scripts, installation or bypassing approval. Stay within the native workflow above. After accepted revisions, recheck preserved information and report only checks actually performed. If preservation checks fail, do not replace the current manuscript; retain the proposal and diff for review.
+
+These are writing and review instructions, not an application-enforced tone artifact gate. Include tone findings, acceptance status, change-record paths and any unperformed checks in the final report.
+
 ## Non-negotiables
 
 - Every empirical number must trace to a run ID and an artifact path.

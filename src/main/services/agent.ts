@@ -31,6 +31,7 @@ import type { SettingsService } from './settings'
 import type { UsageService } from './usage'
 import type { McpService } from './mcp'
 import type { KnowledgeService } from './knowledge'
+import type { PaperContextService } from './paper-context'
 
 const DSH_HOME_DIR = 'dsh-home'
 const PATCH_FILE = 'researchpilot.patch.yml'
@@ -78,6 +79,7 @@ export class AgentService {
         promise: Promise<string>
       }
     | undefined
+  private preparing = false
   private stopping = false
   private toolNames = new Map<string, string>()
 
@@ -88,7 +90,8 @@ export class AgentService {
     private readonly projects: ProjectService,
     private readonly usage: UsageService,
     private readonly mcp?: McpService,
-    private readonly knowledge?: KnowledgeService
+    private readonly knowledge?: KnowledgeService,
+    private readonly paperContext?: Pick<PaperContextService, 'context'>
   ) {}
 
   getState(): AgentPublicState {
@@ -96,7 +99,7 @@ export class AgentService {
   }
 
   isRunning(): boolean {
-    return this.active !== undefined
+    return this.preparing || this.active !== undefined
   }
 
   private publishState(patch: Partial<AgentPublicState>): void {
@@ -156,6 +159,12 @@ Use the skill tool before substantive work:
 - \`experiment-design\` for hypotheses, protocols, code and runs.
 - \`plotting\` for publication-quality figures.
 - \`paper-writing\` for DOCX and LaTeX manuscripts.
+- For scientific writing and polishing, load \`lieflat-less-ai-tone\` by default alongside the relevant writing skill, and read \`lieflat-less-ai-tone/references/academic-adaptation.md\` from the bundled skills directory. Apply the academic adaptation rather than mechanically removing rhetorical patterns.
+  - Existing manuscripts: diagnose and propose first; wait until the user accepts the proposal before any revision. Minimal-question mode and pipeline auto-run are not acceptance.
+  - New drafts generated in the same writing task may undergo within-task tone check/revise. Preserve the original draft and traceable records of candidates, decisions/reasons, before/after changes and rechecks through approved native artifact writes; never silently overwrite the source.
+  - Preserve data, units, sample sizes, citations and attribution, negation, causal strength, uncertainty, terminology, formulas, code and document structure. If a safe minimal edit is uncertain, retain the original and report the concern.
+  - If Python is unavailable or detection did not successfully run, do not claim script detection or invent metrics; label model-only observations and disclose unperformed checks. Style statistics are heuristics, not an AI probability or proof of authorship, and never a guarantee of passing a detector.
+  - Tone guidance does not authorize shell scripts or bypass native-tool approval. Distinguish actual script candidates, model judgments and human review; do not replace the current manuscript if preservation checks fail.
 - \`research-pipeline\` for multi-stage orchestration and checkpoints.
 - \`data-audit\` before analyzing a new dataset; never silently repair or drop records.
 - \`statistical-analysis\` for prespecified comparisons, independent sampling units and uncertainty.
@@ -362,62 +371,69 @@ NON-NEGOTIABLE RULES
     const fallback = this.providers.list().find((item) => item.id === defaults.defaultProviderId) ?? this.providers.defaultProvider()
     const providerId = chat?.providerId || fallback?.id || ''
     const selectedProvider = this.providers.list().find((item) => item.id === providerId)
-    const selectedModel = chat?.modelId || defaults.defaultModelId || selectedProvider?.models[0]?.id || ''
+    const selectedModel = chat?.modelId || defaults.defaultModelId || (selectedProvider?.models.length === 1 ? selectedProvider.models[0].id : '')
     const { provider, modelId } = this.validateSelection(providerId, selectedModel)
     const resolvedChat = this.chats.ensure(projectId, chatId, provider.id, modelId)
     return { chat: resolvedChat, provider, modelId }
   }
 
   async send(input: ChatSendInput, assertActive: () => void = () => {}): Promise<ChatSendResult> {
-    if (this.active) throw new Error('智能体正在执行上一个任务。请等待完成，或点击停止。')
-    const project = this.projects.get(input.projectId)
-    if (input.modelOverride) {
-      this.validateSelection(input.modelOverride.providerId, input.modelOverride.modelId)
-      if (!input.chatId) throw new Error('固定模型任务需要已登记会话。')
-      if (this.chats.get(input.chatId).projectId !== input.projectId) throw new Error('会话不属于当前项目。')
-      this.chats.setModel(input.chatId, input.modelOverride.providerId, input.modelOverride.modelId)
+    if (this.isRunning()) throw new Error('智能体正在执行上一个任务。请等待完成，或点击停止。')
+    // Reserve before chat resolution yields so IPC cannot switch the route mid-send.
+    this.stopping = false
+    this.preparing = true
+    try {
+      const project = this.projects.get(input.projectId)
+      if (input.modelOverride) {
+        this.validateSelection(input.modelOverride.providerId, input.modelOverride.modelId)
+        if (!input.chatId) throw new Error('固定模型任务需要已登记会话。')
+        if (this.chats.get(input.chatId).projectId !== input.projectId) throw new Error('会话不属于当前项目。')
+        this.chats.setModel(input.chatId, input.modelOverride.providerId, input.modelOverride.modelId)
+      }
+      const { chat, provider, modelId } = await this.resolveChatConfig(input.projectId, input.chatId)
+      assertActive()
+      assertProjectRootAvailable(project)
+      const text = input.text.trim()
+      const attachments = storeAttachments(project, input.attachments ?? [])
+      if (!text && attachments.length === 0) throw new Error('消息不能为空。')
+
+      const userMessage = this.chats.addMessage({
+        chatId: chat.id,
+        projectId: project.id,
+        role: 'user',
+        kind: 'text',
+        content: text,
+        attachments: attachments.map((attachment) => ({
+          name: attachment.name,
+          relativePath: attachment.relativePath,
+          size: attachment.size,
+          mimeType: attachment.mimeType,
+          kind: attachment.kind
+        }))
+      })
+      emitEvent({ type: 'chat-message', projectId: project.id, chatId: chat.id, message: userMessage })
+      this.publishState({
+        status: 'starting',
+        projectId: project.id,
+        chatId: chat.id,
+        providerId: provider.id,
+        modelId,
+        sessionId: chat.dshSessionId,
+        lastError: ''
+      })
+
+      const promise = this.run(chat, project, provider, modelId, text, attachments, assertActive)
+      this.active = { chatId: chat.id, promise }
+      void promise.finally(() => {
+        if (this.active?.promise === promise) this.active = undefined
+      }).catch(() => undefined)
+      return { chat, userMessage }
+    } finally {
+      this.preparing = false
     }
-    const { chat, provider, modelId } = await this.resolveChatConfig(input.projectId, input.chatId)
-    assertActive()
-    assertProjectRootAvailable(project)
-    const text = input.text.trim()
-    const attachments = storeAttachments(project, input.attachments ?? [])
-    if (!text && attachments.length === 0) throw new Error('消息不能为空。')
-
-    const userMessage = this.chats.addMessage({
-      chatId: chat.id,
-      projectId: project.id,
-      role: 'user',
-      kind: 'text',
-      content: text,
-      attachments: attachments.map((attachment) => ({
-        name: attachment.name,
-        relativePath: attachment.relativePath,
-        size: attachment.size,
-        mimeType: attachment.mimeType,
-        kind: attachment.kind
-      }))
-    })
-    emitEvent({ type: 'chat-message', projectId: project.id, chatId: chat.id, message: userMessage })
-    this.publishState({
-      status: 'starting',
-      projectId: project.id,
-      chatId: chat.id,
-      providerId: provider.id,
-      modelId,
-      sessionId: chat.dshSessionId,
-      lastError: ''
-    })
-
-    const promise = this.run(chat, project, provider, modelId, text, attachments)
-    this.active = { chatId: chat.id, promise }
-    void promise.finally(() => {
-      if (this.active?.promise === promise) this.active = undefined
-    }).catch(() => undefined)
-    return { chat, userMessage }
   }
 
-  private async run(chat: Chat, project: Project, provider: Provider, modelId: string, text: string, attachments: StoredAttachment[]): Promise<string> {
+  private async run(chat: Chat, project: Project, provider: Provider, modelId: string, text: string, attachments: StoredAttachment[], assertActive: () => void): Promise<string> {
     try {
       await this.ensureRuntime(project, provider, modelId)
       const session = await this.ensureSession(chat, project)
@@ -425,6 +441,17 @@ NON-NEGOTIABLE RULES
       const blocks = await this.promptBlocks(text, attachments)
       const context = this.knowledge?.context(project.id, text) ?? ''
       if (context) blocks.push({ type: 'text', text: context })
+      if (this.paperContext) {
+        // Retrieval is local; failures must fail the turn, not invite unsupported model output.
+        const paper = await this.paperContext.context(project.id, text)
+        blocks.push({ type: 'text', text: paper
+          ? `Apply this paper context only to its target document in the current project, including pipeline tasks. An active paper is the user's default selection, not authorization to apply its claims or decisions to other documents or to revise it without approval.\n${paper}`
+          : 'No active paper context now. Earlier paper-context snapshots are not current and must not be used as current evidence or decisions unless the user explicitly asks to discuss those historical snapshots.' })
+      }
+      // Stop may finish closing the subprocess before asynchronous retrieval returns.
+      if (this.stopping) throw new Error('智能体任务已停止。')
+      assertActive()
+      assertProjectRootAvailable(project)
       const result = await session.run(blocks, {
         onNotification: (notification) => this.handleNotification(notification, chat, project)
       })
@@ -591,7 +618,7 @@ NON-NEGOTIABLE RULES
     this.stopping = true
     this.publishState({ status: 'stopped' })
     await this.closeRuntime()
-    this.stopping = false
+    // Keep cancellation latched until a new send; context preparation may still be awaiting.
   }
 
   private async closeRuntime(): Promise<void> {

@@ -6,6 +6,8 @@ import { BACKUP_LIMITS, BACKUP_WARNINGS, backupId } from '../../shared/backups'
 import type { BackupExportResult, BackupPreview, BackupRestoreResult, BackupSummary } from '../../shared/backups'
 import { parseNoteLinks } from '../../shared/notes'
 import { parsePdfAnnotationCreate } from '../../shared/pdf-annotations'
+import { parseWorkspace } from '../../shared/research-workflows'
+import { PAPER_CONTEXT_LIMITS, parsePaperMemory, type PaperSource, type PaperSourceKind } from '../../shared/paper-context'
 
 // Deliberately not ZIP: bounded length-prefixed JSON and uncompressed bytes. No archive
 // extractor, decompressor, SQL, script, renderer-supplied path or configuration is executed.
@@ -22,7 +24,12 @@ const TABLES = {
   note_links: 'project_id source_id target_id',
   reference_activity: 'id project_id reference_id title kind channel created_at',
   reference_reading_drafts: 'id project_id reference_id source_hash source_coverage content model_label created_at',
-  pdf_annotations: 'id project_id reference_id fingerprint page quote comment color rects_json revision created_at updated_at'
+  pdf_annotations: 'id project_id reference_id fingerprint page quote comment color rects_json revision created_at updated_at',
+  research_workspaces: 'id project_id kind topic revision content_json created_at updated_at',
+  research_tasks: 'id project_id workspace_id operation status input_hash provider_id model_id output error created_at finished_at',
+  paper_memories: 'project_id document_id revision content_json updated_at',
+  paper_context_sources: 'id project_id document_id kind target_id content_json',
+  paper_context_active: 'project_id document_id'
 } as const
 
 type Table = keyof typeof TABLES
@@ -31,7 +38,7 @@ type Row = Record<string, Cell>
 type Records = Record<Table, Row[]>
 interface Metadata { createdAt: string; records: Records }
 interface FileEntry { path: string; size: number; sha256: string }
-interface Manifest { version: 1; metadata: string; metadataSha256: string; files: FileEntry[] }
+interface Manifest { version: 1 | 2 | 3; metadata: string; metadataSha256: string; files: FileEntry[] }
 interface Bundle { manifest: Manifest; metadata: Metadata; files: Buffer[]; digest: string }
 interface BackupOptions { workspaceRoot: () => string; assertIdle: () => void }
 const NUMBERS = new Set(['archived', 'position', 'word_count', 'size', 'pinned', 'revision', 'page', 'exit_code'])
@@ -42,6 +49,7 @@ const DENIED = /(?:^|[._-])(?:secret|secrets|credential|credentials|password|pas
 const DENIED_DIRS = new Set(['node_modules', '__pycache__', 'venv', 'site-packages', 'skills', 'bin', 'dist', 'build'])
 const ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/
 const HASH = /^[a-f0-9]{64}$/
+const PAPER_TARGETS: Record<PaperSourceKind, Table> = { manuscript: 'documents', reference: 'reference_items', run: 'experiment_runs', note: 'project_notes', figure: 'figures' }
 
 class BackupError extends Error {}
 function fail(message: string): never { throw new BackupError(message) }
@@ -121,6 +129,31 @@ function summary(bundle: Bundle): BackupSummary {
   }
 }
 
+type BackupPaperSource = PaperSource & { missingTarget?: true }
+function paperSource(row: Row, allowMissing = false): BackupPaperSource {
+  const raw = JSON.parse(String(row.content_json))
+  const missing = allowMissing && raw && Object.hasOwn(raw, 'missingTarget')
+  const source = object(raw, ['id', 'kind', 'targetId', 'title', 'locator', 'hash', 'capturedAt', 'text', 'coverage', 'truncated', 'sections', ...(missing ? ['missingTarget'] : [])])
+  if (missing && source.missingTarget !== true) fail('论文来源缺失标记无效。')
+  if (identifier(source.id) !== row.id || source.kind !== row.kind || identifier(source.targetId) !== row.target_id || !Object.hasOwn(PAPER_TARGETS, String(source.kind))) fail('论文来源元数据不一致。')
+  text(source.title, 1000); text(source.coverage, 6000)
+  const content = text(source.text, PAPER_CONTEXT_LIMITS.sourceChars)
+  if (!HASH.test(text(source.hash, 64)) || !Number.isFinite(Date.parse(text(source.capturedAt, 64))) || typeof source.truncated !== 'boolean') fail('论文来源快照无效。')
+  const prefix = `${source.kind === 'manuscript' ? 'document' : source.kind}:${source.targetId}`
+  const locator = text(source.locator, 1024)
+  if (locator !== prefix && !(locator.startsWith(prefix) && /^#(?:offset=\d+|page=[1-9]\d*(?:&offset=\d+)?)$/.test(locator.slice(prefix.length)))) fail('论文来源定位关系无效。')
+  if (!Array.isArray(source.sections) || source.sections.length > PAPER_CONTEXT_LIMITS.sourceChars) fail('论文章节快照无效。')
+  const ids = new Set<string>()
+  for (const raw of source.sections) {
+    const section = object(raw, ['id', 'title', 'start', 'end', 'text'])
+    const id = identifier(section.id)
+    if (ids.has(id)) fail('论文章节标识重复。')
+    ids.add(id); text(section.title, 200)
+    if (typeof section.start !== 'number' || typeof section.end !== 'number' || !Number.isSafeInteger(section.start) || !Number.isSafeInteger(section.end) || section.start < 0 || section.end <= section.start || section.end > content.length || section.end - section.start > 2000 || text(section.text, 2000) !== content.slice(section.start, section.end)) fail('论文章节文本或范围无效。')
+  }
+  return source as unknown as BackupPaperSource
+}
+
 function validateMetadata(raw: unknown, paths: Set<string>): Metadata {
   const outer = object(raw, ['createdAt', 'records'])
   const createdAt = text(outer.createdAt, 64)
@@ -156,6 +189,8 @@ function validateMetadata(raw: unknown, paths: Set<string>): Metadata {
     const path = portablePath(value)
     if (!paths.has(path)) fail('备份缺少已登记的研究文件。')
   }
+  const memories = new Set<Cell>(), activeProjects = new Set<Cell>(), sourceTargets = new Set<string>()
+  const sourceCounts = new Map<Cell, number>()
   for (const table of Object.keys(TABLES) as Table[]) for (const row of records[table]) {
     if ('project_id' in row && row.project_id !== project.id) fail('备份包含其他项目的数据。')
     if ('document_id' in row && !scoped('documents', row.document_id)) fail('备份文稿版本关系无效。')
@@ -163,6 +198,37 @@ function validateMetadata(raw: unknown, paths: Set<string>): Metadata {
     if (table === 'experiment_runs' && !scoped('experiments', row.experiment_id)) fail('备份实验关系无效。')
     if (table === 'figures' && row.experiment_id !== '' && !scoped('experiments', row.experiment_id)) fail('备份图表实验关系无效。')
     if (table === 'note_links' && (!scoped('project_notes', row.source_id) || !scoped('project_notes', row.target_id))) fail('备份笔记链接关系无效。')
+    if (table === 'research_workspaces') {
+      const workspace = parseWorkspace(JSON.parse(String(row.content_json)))
+      if (workspace.id !== row.id || workspace.revision !== row.revision || workspace.kind !== row.kind || workspace.topic !== row.topic) fail('研究工作页元数据不一致。')
+      for (const evidence of workspace.evidence) if (evidence.coverage !== 'artifact' && !scoped('reference_items', evidence.referenceId)) fail('研究来源不属于备份项目。')
+      for (const test of workspace.method.tests) if (!scoped('experiment_runs', test.runId)) fail('方法运行记录关系无效。')
+    }
+    if (table === 'research_tasks' && !scoped('research_workspaces', row.workspace_id)) fail('研究任务关系无效。')
+    if (table === 'paper_memories') {
+      const rawMemory = JSON.parse(String(row.content_json))
+      const memory = parsePaperMemory(rawMemory)
+      // The shared parser normalizes nested items; backups must not silently discard
+      // unknown fields (including accidentally persisted environment/credential data).
+      for (const item of rawMemory.decisions) object(item, ['id', 'text', 'status', 'chapter'])
+      for (const item of rawMemory.issues) object(item, ['id', 'text', 'chapter', 'resolved'])
+      if (memory.documentId !== row.document_id || memory.revision !== row.revision || memory.revision < 1 || memories.has(row.document_id)) fail('论文记忆元数据不一致或重复。')
+      memories.add(row.document_id)
+      if (!Number.isFinite(Date.parse(text(row.updated_at, 64)))) fail('论文记忆时间无效。')
+    }
+    if (table === 'paper_context_active') {
+      if (activeProjects.has(row.project_id)) fail('论文活动选择重复。')
+      activeProjects.add(row.project_id)
+    }
+    if (table === 'paper_context_sources') {
+      const source = paperSource(row, true)
+      const belongs = scoped(PAPER_TARGETS[source.kind], row.target_id)
+      if (source.missingTarget ? source.kind === 'manuscript' || ids.has(String(row.target_id)) : !belongs || (source.kind === 'manuscript' && row.target_id !== row.document_id)) fail('论文来源不属于备份项目或当前文稿。')
+      const key = JSON.stringify([row.document_id, row.kind, row.target_id])
+      const count = (sourceCounts.get(row.document_id) ?? 0) + 1
+      if (sourceTargets.has(key) || count > PAPER_CONTEXT_LIMITS.sources) fail('论文来源重复或超过数量限制。')
+      sourceTargets.add(key); sourceCounts.set(row.document_id, count)
+    }
     if (table === 'documents') {
       if (!['docx', 'latex'].includes(String(row.format)) || basename(String(row.relative_path)) !== row.file_name) fail('备份文稿格式无效。')
       requiredFile(row.relative_path)
@@ -230,6 +296,12 @@ export class BackupService {
         if (metadataBytes > BACKUP_LIMITS.metadataBytes) fail('项目元数据超出备份限制。')
         records[table] = this.db.all<Row>(`SELECT ${TABLES[table].split(' ').join(', ')} FROM ${table} WHERE ${where}`, projectId)
       }
+      for (const row of records.paper_context_sources) {
+        const source = paperSource(row)
+        const target = this.db.get<Row>(`SELECT project_id FROM ${PAPER_TARGETS[source.kind]} WHERE id = ?`, source.targetId)
+        if (target && target.project_id !== projectId) fail('论文来源不属于备份项目。')
+        if (!target && source.kind !== 'manuscript') row.content_json = JSON.stringify({ ...source, missingTarget: true })
+      }
     })
     const selections = new Map<string, string>()
     const select = (source: string, target = source): void => {
@@ -262,7 +334,7 @@ export class BackupService {
       }
     }
     for (const dir of ROOTS) if (existsSync(join(root, dir))) walk(dir)
-    const manifest: Manifest = { version: 1, metadata: '', metadataSha256: '', files: [] }
+    const manifest: Manifest = { version: 3, metadata: '', metadataSha256: '', files: [] }
     const files: Buffer[] = []
     let total = 0
     const casePaths = new Set<string>()
@@ -323,7 +395,7 @@ export class BackupService {
     const length = bytes.readUInt32LE(8)
     if (length < 2 || length > BACKUP_LIMITS.metadataBytes * 2 || 12 + length > bytes.length) fail('备份清单长度无效。')
     const raw = object(JSON.parse(bytes.subarray(12, 12 + length).toString('utf8')), ['version', 'metadata', 'metadataSha256', 'files'])
-    if (raw.version !== 1) fail('备份格式版本不受支持，请使用匹配的应用版本。')
+    if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3) fail('备份格式版本不受支持，请使用匹配的应用版本。')
     const metadataText = text(raw.metadata)
     if (Buffer.byteLength(metadataText) > BACKUP_LIMITS.metadataBytes || !HASH.test(String(raw.metadataSha256)) || sha(metadataText) !== raw.metadataSha256) fail('备份元数据校验失败。')
     if (!Array.isArray(raw.files) || raw.files.length > BACKUP_LIMITS.files) fail('备份文件数量无效。')
@@ -346,7 +418,25 @@ export class BackupService {
       const parts = path.split('/')
       for (let i = 1; i < parts.length; i++) if (cases.has(parts.slice(0, i).join('/').toLowerCase())) fail('备份文件和目录路径冲突。')
     }
-    const metadata = validateMetadata(JSON.parse(metadataText), paths)
+    const rawMetadata = JSON.parse(metadataText)
+    if (raw.version < 3) {
+      const records = rawMetadata?.records
+      if (!records || typeof records !== 'object' || Array.isArray(records)) fail('旧版备份的数据结构无效。')
+      if (raw.version === 1) {
+        if (Object.hasOwn(records, 'research_workspaces') || Object.hasOwn(records, 'research_tasks')) fail('旧版备份的研究数据结构无效。')
+        records.research_workspaces = []; records.research_tasks = []
+      }
+      // Missing tables are a legacy-format allowance only. Present malformed data
+      // is still validated, never replaced with an empty table or silently dropped.
+      for (const table of ['paper_memories', 'paper_context_sources', 'paper_context_active']) if (!Object.hasOwn(records, table)) records[table] = []
+    }
+    const metadata = validateMetadata(rawMetadata, paths)
+    for (const row of metadata.records.paper_context_sources) {
+      const source = paperSource(row, true)
+      // A tombstone cannot be used to smuggle a live target from this installation.
+      // Truly absent archive targets are restored to fresh nonresolving IDs below.
+      if (source.missingTarget && this.db.get(`SELECT id FROM ${PAPER_TARGETS[source.kind]} WHERE id = ?`, source.targetId)) fail('论文来源缺失标记指向现有记录。')
+    }
     return { manifest: raw as unknown as Manifest, metadata, files, digest: sha(bytes) }
   }
 
@@ -394,11 +484,38 @@ export class BackupService {
             if (table === 'note_links') continue // Derive graph from restored bodies, not archive-supplied edges.
             for (const original of records[table]) {
               const row: Row = { ...original }
-              for (const key of ['id', 'project_id', 'document_id', 'experiment_id', 'reference_id']) if (typeof row[key] === 'string' && row[key]) {
+              for (const key of ['id', 'project_id', 'document_id', 'experiment_id', 'reference_id', 'workspace_id']) if (typeof row[key] === 'string' && row[key]) {
                 const previous = String(row[key])
                 if (!ids.has(previous)) ids.set(previous, `source_${randomUUID().replaceAll('-', '')}`)
                 row[key] = ids.get(previous)!
               }
+              if (table === 'research_workspaces') {
+                const workspace = parseWorkspace(JSON.parse(String(row.content_json)))
+                workspace.id = String(row.id)
+                for (const evidence of workspace.evidence) { const previous = evidence.referenceId; evidence.referenceId = ids.get(previous) ?? previous; evidence.locator = evidence.locator.replace(`reference:${previous}`, `reference:${evidence.referenceId}`) }
+                for (const test of workspace.method.tests) test.runId = ids.get(test.runId) ?? test.runId
+                row.content_json = JSON.stringify(workspace)
+              }
+              if (table === 'paper_memories') {
+                const memory = parsePaperMemory(JSON.parse(String(row.content_json)))
+                memory.documentId = String(row.document_id)
+                row.content_json = JSON.stringify(memory)
+              }
+              if (table === 'paper_context_sources') {
+                const source = paperSource(original, true)
+                const previous = source.targetId
+                // Never reuse an archive tombstone ID or resolve it to any live row.
+                row.target_id = source.missingTarget ? `missing_${randomUUID().replaceAll('-', '')}` : ids.get(previous)!
+                delete source.missingTarget
+                source.id = String(row.id); source.targetId = String(row.target_id)
+                const prefix = `${source.kind === 'manuscript' ? 'document' : source.kind}:`
+                source.locator = `${prefix}${source.targetId}${source.locator.slice(prefix.length + previous.length)}`
+                // Hashes describe the captured original registered content, not IDs
+                // rewritten by restore. Preserve snapshots/prose/sections verbatim;
+                // the paper service can mark ID-sensitive fingerprints as changed.
+                row.content_json = JSON.stringify(source)
+              }
+              if (table === 'research_tasks' && ['running','pending'].includes(String(row.status))) { row.status = 'interrupted'; row.error = '从备份恢复，原运行已中断。' }
               if (table === 'projects') { row.root_path = root; row.name = name; row.archived = 0; row.updated_at = new Date().toISOString() }
               if (table === 'experiments') { row.env_kind = 'local'; row.ssh_host_id = ''; row.status = 'idle'; row.last_run_id = '' }
               if (table === 'experiment_runs' && ['running', 'queued'].includes(String(row.status))) row.status = 'cancelled'

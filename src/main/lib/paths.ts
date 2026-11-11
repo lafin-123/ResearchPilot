@@ -116,13 +116,15 @@ export function ensureProjectLayout(project: Project): void {
   const bridgeSource = bundledResource('bridge')
   const bridgeTarget = join(project.rootPath, '.research', 'bin')
   if (existsSync(bridgeSource)) {
-    for (const entry of ['research-cli.ps1', 'research.cmd', 'research.sh']) {
-      const source = join(bridgeSource, entry)
+    const entries = ['research-cli.ps1', 'research.cmd', 'research.sh']
+    if (process.platform !== 'win32') entries.push('research')
+    for (const entry of entries) {
+      const source = join(bridgeSource, entry === 'research' ? 'research.sh' : entry)
       const target = join(bridgeTarget, entry)
       if (existsSync(source)) {
         try {
           cpSync(source, target)
-          if (entry.endsWith('.sh')) chmodSync(target, 0o755)
+          if (entry === 'research' || entry.endsWith('.sh')) chmodSync(target, 0o755)
         } catch {
           // Best-effort; the bridge can still be used through HTTP directly.
         }

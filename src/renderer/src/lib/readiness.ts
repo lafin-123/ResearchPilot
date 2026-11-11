@@ -47,7 +47,7 @@ export function assessReadiness(projectId: string, data: ReadinessData, selected
     issues.push({ id: 'bootstrap', text: data.bootstrap.status === 'error' ? `环境状态读取失败：${data.bootstrap.error}` : '正在读取模型与 Python 环境状态。', to: '/setup', action: '查看准备情况' })
   } else {
     const routes = bootstrap!.settings.agentRoleModels
-    const allRolesConfigured = AGENT_ROLES.every(role => routes?.[role.id])
+    const allRolesConfigured = ['writing','figures','engineering'].every(role => routes?.[role as keyof typeof routes])
     if (!allRolesConfigured) issues.push(...model.issues)
     for (const role of AGENT_ROLES) if (routes?.[role.id]) {
       try { resolveAgentRole(role.id, routes, bootstrap!.providers) }

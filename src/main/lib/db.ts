@@ -300,6 +300,57 @@ const MIGRATIONS: string[] = [
     updated_at TEXT NOT NULL
   );
   CREATE INDEX idx_pdf_annotations_scope ON pdf_annotations(project_id, reference_id, fingerprint, page, created_at);
+  `,
+  `
+  CREATE TABLE research_workspaces (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK(kind IN ('brainstorm','method')),
+    topic TEXT NOT NULL,
+    revision INTEGER NOT NULL DEFAULT 1,
+    content_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+  CREATE INDEX idx_research_project ON research_workspaces(project_id, updated_at DESC);
+  CREATE TABLE research_tasks (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    workspace_id TEXT NOT NULL REFERENCES research_workspaces(id) ON DELETE CASCADE,
+    operation TEXT NOT NULL,
+    status TEXT NOT NULL,
+    input_hash TEXT NOT NULL,
+    provider_id TEXT NOT NULL DEFAULT '',
+    model_id TEXT NOT NULL DEFAULT '',
+    output TEXT NOT NULL DEFAULT '',
+    error TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    finished_at TEXT NOT NULL DEFAULT ''
+  );
+  CREATE INDEX idx_research_tasks ON research_tasks(project_id, workspace_id, created_at DESC);
+  `,
+  `
+  CREATE TABLE paper_memories (
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    document_id TEXT PRIMARY KEY REFERENCES documents(id) ON DELETE CASCADE,
+    revision INTEGER NOT NULL CHECK(revision >= 1),
+    content_json TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+  CREATE TABLE paper_context_sources (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    document_id TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK(kind IN ('manuscript','reference','run','note','figure')),
+    target_id TEXT NOT NULL,
+    content_json TEXT NOT NULL,
+    UNIQUE(document_id, kind, target_id)
+  );
+  CREATE INDEX idx_paper_sources_project ON paper_context_sources(project_id, document_id);
+  CREATE TABLE paper_context_active (
+    project_id TEXT PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
+    document_id TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE
+  );
   `
 ]
 

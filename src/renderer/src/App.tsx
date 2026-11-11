@@ -6,6 +6,7 @@ import { api, formatError } from './lib/api'
 import { useAppStore } from './store/app'
 import { Sidebar } from './components/Sidebar'
 import { Topbar } from './components/Topbar'
+import { WorkspaceNav } from './components/WorkspaceNav'
 import { ApprovalModal } from './components/ApprovalModal'
 import { CommandPalette } from './components/CommandPalette'
 import { Button, Field, Input, Spinner, Textarea } from './components/Ui'
@@ -25,6 +26,7 @@ import { KnowledgePage } from './pages/Knowledge'
 import { NotesPage } from './pages/Notes'
 import { BackupsPage } from './pages/Backups'
 import { SetupPage } from './pages/Setup'
+import { ResearchPage } from './pages/Research'
 
 function Welcome(): ReactNode {
   const refreshBootstrap = useAppStore((state) => state.refreshBootstrap)
@@ -166,6 +168,7 @@ export default function App(): ReactNode {
         <Sidebar />
         <div className="main-shell">
           <Topbar onCommandPalette={() => setPaletteOpen(true)} />
+          <WorkspaceNav />
           <main className={location.pathname.startsWith('/write/') || location.pathname === '/agent' || location.pathname === '/notes' || location.pathname.startsWith('/notes/') ? 'content content-flush' : 'content'}>
             <Routes>
               <Route path="/" element={<DashboardPage />} />
@@ -174,6 +177,8 @@ export default function App(): ReactNode {
               <Route path="/write/:documentId" element={<Suspense fallback={<Spinner label="正在加载论文编辑器…" />}><EditorPage /></Suspense>} />
               <Route path="/experiments" element={<ExperimentsPage />} />
               <Route path="/figures" element={<FiguresPage />} />
+              <Route path="/research" element={<ResearchPage key="research" />} />
+              <Route path="/methods" element={<ResearchPage key="methods" kind="method" />} />
               <Route path="/pipeline" element={<PipelinePage />} />
               <Route path="/agent" element={<AgentPage />} />
               <Route path="/account" element={<Navigate to="/settings" replace />} />

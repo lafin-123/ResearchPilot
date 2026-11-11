@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { _electron as electron } from 'playwright-core'
 import JSZip from 'jszip'
+import { navigateWorkspace } from './workspace-navigation.mjs'
 
 const require = createRequire(import.meta.url)
 const root = resolve(import.meta.dirname, '..')
@@ -48,7 +49,7 @@ try {
   const activity = await page.evaluate((projectId) => window.researchpilot.knowledge.activity({ projectId, limit: 50 }), projectId)
   assert.ok(activity.some((entry) => entry.referenceId === reference.id && entry.kind === 'read'))
   assert.ok(activity.some((entry) => entry.referenceId === reference.id && entry.kind === 'note_updated'))
-  await page.locator('.sidebar a[href="#/knowledge"]').click()
+  await navigateWorkspace(page, '/knowledge')
   await page.getByRole('heading', { level: 1 }).waitFor()
   await page.screenshot({ path: join(runDir, '10-project-knowledge.png'), fullPage: true })
   record('Reference addition, reading and notes persist with searchable project-scoped RAG sources')
@@ -68,7 +69,7 @@ try {
   await page.locator('.exp-item').filter({hasText:'草稿隔离 A'}).click()
   await page.getByTestId('experiment-code-tab').click()
   await page.waitForFunction(() => document.querySelector('[data-testid="experiment-editor"] .cm-content')?.textContent.includes('A unsaved'))
-  await page.locator('.sidebar a[href="#/knowledge"]').click()
+  await navigateWorkspace(page, '/knowledge')
   await page.locator('.sidebar a[href="#/experiments"]').click()
   await page.locator('.exp-item').filter({hasText:'草稿隔离 A'}).click()
   await page.getByTestId('experiment-code-tab').click()
@@ -76,7 +77,7 @@ try {
   assert.equal(await page.evaluate((id) => window.researchpilot.experiments.readCode(id), expA.id), 'print("A saved")\n')
   assert.equal(await page.evaluate((id) => window.researchpilot.experiments.readCode(id), expB.id), 'print("B saved")\n')
   record('Experiment edits survive selection and navigation without overwriting saved code')
-  await page.locator('.sidebar a[href="#/writing-quality"]').click()
+  await navigateWorkspace(page, '/writing-quality')
   await page.locator('#wq-draft').fill('综上所述，本研究具有重要意义。我们纳入30名参与者，观察值为12.5%，来源见[1]。本研究具有重要意义。')
   await page.getByRole('button', { name: '运行本地检查与对照', exact: true }).click()
   await page.getByText(/检查完成，显示/).waitFor()
@@ -92,7 +93,7 @@ try {
   assert.match(rewriteDraft, /\[1\]/)
   assert.equal((await page.evaluate(() => window.researchpilot.chat.state())).status === 'running', false)
   record('Writing diagnostics and preservation-aware rewrite draft work locally without an LLM call')
-  await page.locator('.sidebar a[href="#/writing-quality"]').click()
+  await navigateWorkspace(page, '/writing-quality')
   assert.match(await page.locator('#wq-draft').inputValue(), /纳入30名参与者/)
   const revisionText = '我们纳入30名参与者，观察值为12.5%，来源见[1]。仅对当前样本报告结果。'
   await page.getByLabel('实际修订后的文本', { exact: true }).fill(revisionText)
@@ -116,11 +117,11 @@ try {
   await page.getByRole('button', { name: /新建研究任务/ }).first().click()
   await page.waitForFunction(() => document.querySelector('.composer-box textarea')?.value === '')
   await page.locator('.composer-box textarea').fill('未发送草稿 B。')
-  await page.locator('.sidebar a[href="#/knowledge"]').click()
+  await navigateWorkspace(page, '/knowledge')
   await page.locator('.sidebar a[href="#/agent"]').click()
   assert.equal(await page.locator('.composer-box textarea').inputValue(), '未发送草稿 B。')
   record('Chat drafts are separate for new chats and survive route navigation')
-  await page.locator('.sidebar a[href="#/mcp"]').click()
+  await navigateWorkspace(page, '/mcp')
   const servers = await page.evaluate((id) => window.researchpilot.mcp.list(id), projectId)
   assert.equal(servers.length, 3)
   for (const server of servers) {
@@ -130,7 +131,7 @@ try {
   }
   await page.reload()
   await page.waitForSelector('.sidebar')
-  await page.locator('.sidebar a[href="#/mcp"]').click()
+  await navigateWorkspace(page, '/mcp')
   await page.getByRole('heading', { level: 1 }).waitFor()
   await page.screenshot({ path: join(runDir, '09-mcp-tools.png'), fullPage: true })
   record('Three actual stdio MCP servers initialize, discover their declared tools and call scoped diagnostics')
@@ -148,7 +149,7 @@ try {
   await page.waitForSelector('.composer-box textarea')
   assert.match(await page.locator('.composer-box textarea').inputValue(), /可编辑 PPTX/)
   record('Task starter hands an editable-figure request to the agent')
-  await page.locator('.sidebar a[href="#/figures"]').click()
+  await navigateWorkspace(page, '/figures')
   await page.getByTestId('figure-advanced-tools').click()
   await page.getByRole('button', { name: '新建可编辑图', exact: true }).click()
   await page.getByRole('button', { name: '载入演示（非证据）', exact: true }).click()
@@ -208,10 +209,10 @@ try {
   record('Diagram PowerPoint contains separate editable text, shapes and connections')
   await page.reload()
   await page.waitForSelector('.sidebar', { timeout: 30000 })
-  await page.locator('.sidebar a[href="#/figures"]').click()
+  await navigateWorkspace(page, '/figures')
   await page.getByText(diagramSpec.title, { exact: true }).first().waitFor()
   await page.screenshot({ path: join(runDir, '03-figures.png'), fullPage: true })
-  await page.locator('.sidebar a[href="#/skills"]').click()
+  await navigateWorkspace(page, '/skills')
   await page.getByRole('heading', { level: 1 }).waitFor()
   await page.locator('.skill-row').first().waitFor()
   await page.screenshot({ path: join(runDir, '04-skills.png') })
@@ -220,7 +221,7 @@ try {
   await page.waitForSelector('.composer-box textarea')
   assert.match(await page.locator('.composer-box textarea').inputValue(), /请使用.*技能/)
   record('Research skill prepares a scoped task without executing it')
-  await page.locator('.sidebar a[href="#/pipeline"]').click()
+  await navigateWorkspace(page, '/pipeline')
   await page.getByRole('heading', { level: 1 }).waitFor()
   await page.screenshot({ path: join(runDir, '05-pipeline.png') })
 

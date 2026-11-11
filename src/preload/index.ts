@@ -5,6 +5,37 @@ import type { AppEvent } from '../shared/types'
 import type { AuthStatus } from '../shared/auth'
 
 const api: ResearchPilotApi = {
+  paperContext: {
+    get: (projectId, documentId) => ipcRenderer.invoke('paper-context:get', { projectId, documentId }),
+    save: (projectId, memory) => ipcRenderer.invoke('paper-context:save', { projectId, memory }),
+    activate: (projectId, documentId) => ipcRenderer.invoke('paper-context:activate', { projectId, documentId }),
+    deactivate: projectId => ipcRenderer.invoke('paper-context:deactivate', projectId),
+    link: input => ipcRenderer.invoke('paper-context:link', input),
+    unlink: (projectId, documentId, sourceId) => ipcRenderer.invoke('paper-context:unlink', { projectId, documentId, sourceId }),
+    refresh: (projectId, documentId) => ipcRenderer.invoke('paper-context:refresh', { projectId, documentId }),
+    compose: input => ipcRenderer.invoke('paper-context:compose', input)
+  },
+  writingTone: {
+    inspect: (input, operationId) => ipcRenderer.invoke('writing-tone:inspect', input, operationId),
+    review: (input, operationId) => ipcRenderer.invoke('writing-tone:review', input, operationId),
+    stop: operationId => ipcRenderer.invoke('writing-tone:stop', operationId)
+  },
+  research: {
+    list: projectId => ipcRenderer.invoke('research:list',projectId),
+    create: (projectId,kind,topic) => ipcRenderer.invoke('research:create',{projectId,kind,topic}),
+    get: (projectId,id) => ipcRenderer.invoke('research:get',{projectId,id}),
+    save: (projectId,workspace) => ipcRenderer.invoke('research:save',{projectId,workspace}),
+    remove: (projectId,id) => ipcRenderer.invoke('research:remove',{projectId,id}),
+    collect: (projectId,id,referenceId,pdfPage) => ipcRenderer.invoke('research:collect',{projectId,id,referenceId,pdfPage}),
+    run: (projectId,id,operation,automatic,maxCalls) => ipcRenderer.invoke('research:run',{projectId,id,operation,automatic,maxCalls}),
+    stop: (projectId,id) => ipcRenderer.invoke('research:stop',{projectId,id}),
+    tasks: (projectId,id) => ipcRenderer.invoke('research:tasks',{projectId,id}),
+    exportDoc: (projectId,id) => ipcRenderer.invoke('research:export-doc',{projectId,id}),
+    runMethod: input => ipcRenderer.invoke('research:method-run',input),
+    methodSource: (projectId,id,local) => ipcRenderer.invoke('research:method-source',{projectId,id,local}),
+    methodEnvironment: (projectId,id) => ipcRenderer.invoke('research:method-environment',{projectId,id}),
+    exportMethod: (projectId,id) => ipcRenderer.invoke('research:method-export',{projectId,id})
+  },
   backups: {
     exportProject: (projectId) => ipcRenderer.invoke(IPC.backupExportProject, projectId),
     inspect: () => ipcRenderer.invoke(IPC.backupInspect),

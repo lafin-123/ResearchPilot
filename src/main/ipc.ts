@@ -40,8 +40,17 @@ import type { PdfAnnotationCreate, PdfAnnotationUpdate, PdfScope } from '@shared
 import type { BackupService } from './services/backups'
 import { backupId } from '@shared/backups'
 import type { ProjectHealthService } from './services/project-health'
+import type { ResearchWorkspaceService } from './services/research-workspaces'
+import type { ResearchCoordinator } from './services/research-coordinator'
+import type { ResearchMethodService, MethodRunInput } from './services/research-methods'
+import type { ResearchKind, ResearchOperation } from '../shared/research-workflows'
 
 export interface Services {
+  paperContext: import('./services/paper-context').PaperContextService
+  writingTone: import('./services/writing-tone').WritingToneService
+  researchPages: ResearchWorkspaceService
+  research: ResearchCoordinator
+  methods: ResearchMethodService
   projectHealth: ProjectHealthService
   backups: BackupService
   pdfAnnotations: PdfAnnotationService
@@ -102,6 +111,32 @@ export function registerIpc(services: Services, localSession: LocalSessionServic
     return localSession.authorize()
   }
   const { settings, providers, projects, documents, references, experiments, runner, figures, chats, agent, ssh, approvals, bridge, pipeline, skills, usage, evidence, projectHealth } = services
+  handle('paper-context:get', (input: { projectId: string; documentId: string }) => services.paperContext.get(input.projectId, input.documentId))
+  handle('paper-context:save', (input: { projectId: string; memory: unknown }) => services.paperContext.save(input.projectId, input.memory))
+  handle('paper-context:activate', (input: { projectId: string; documentId: string }) => services.paperContext.activate(input.projectId, input.documentId))
+  handle('paper-context:deactivate', (projectId: string) => services.paperContext.deactivate(projectId))
+  handle('paper-context:link', (input: import('../shared/paper-context').PaperSourceInput) => services.paperContext.link(input))
+  handle('paper-context:unlink', (input: { projectId: string; documentId: string; sourceId: string }) => services.paperContext.unlink(input.projectId, input.documentId, input.sourceId))
+  handle('paper-context:refresh', (input: { projectId: string; documentId: string }) => services.paperContext.refresh(input.projectId, input.documentId))
+  handle('paper-context:compose', (input: import('../shared/paper-context').PaperContextInput) => services.paperContext.compose(input))
+  handle('writing-tone:inspect', (input: import('../shared/writing-tone').ToneReviewInput, operationId?: string) => services.writingTone.inspect(input, operationId))
+  handle('writing-tone:review', (input: import('../shared/writing-tone').ToneReviewInput, operationId?: string) => services.writingTone.review(input, operationId))
+  handle('writing-tone:stop', (operationId?: string) => services.writingTone.stop(operationId))
+  const researchBusy=():boolean=>!!services.research?.isRunning()||!!services.methods?.isRunning()
+  handle('research:list',(projectId:string)=>services.researchPages.list(projectId))
+  handle('research:create',(input:{projectId:string;kind:ResearchKind;topic:string})=>services.researchPages.create(input.projectId,input.kind,input.topic))
+  handle('research:get',(input:{projectId:string;id:string})=>services.researchPages.get(input.projectId,input.id))
+  handle('research:save',(input:{projectId:string;workspace:unknown})=>{if(researchBusy())throw new Error('请等待当前步骤完成后保存编辑。');return services.researchPages.save(input.projectId,input.workspace)})
+  handle('research:remove',(input:{projectId:string;id:string})=>{if(researchBusy())throw new Error('请先停止当前步骤。');services.researchPages.remove(input.projectId,input.id)})
+  handle('research:collect',(input:{projectId:string;id:string;referenceId:string;pdfPage?:number})=>services.research.collect(input.projectId,input.id,input.referenceId,input.pdfPage))
+  handle('research:run',(input:{projectId:string;id:string;operation:ResearchOperation;automatic?:boolean;maxCalls?:number})=>services.research.run(input.projectId,input.id,input.operation,input.automatic,input.maxCalls))
+  handle('research:stop',(input:{projectId:string;id:string})=>{services.research.stop(input.projectId,input.id);services.methods.stop(input.projectId,input.id)})
+  handle('research:tasks',(input:{projectId:string;id:string})=>services.researchPages.tasks(input.projectId,input.id))
+  handle('research:export-doc',(input:{projectId:string;id:string})=>services.research.exportDoc(input.projectId,input.id))
+  handle('research:method-environment',(input:{projectId:string;id:string})=>services.methods.environment(input.projectId,input.id))
+  handle('research:method-source',async(input:{projectId:string;id:string;local?:boolean})=>{let path:string|undefined;if(input.local){const result=await dialog.showOpenDialog({title:'选择论文方法源码目录',properties:['openDirectory']});if(result.canceled||!result.filePaths[0])return null;path=result.filePaths[0]}return services.methods.source(input.projectId,input.id,path)})
+  handle('research:method-run',(input:MethodRunInput)=>services.methods.run(input))
+  handle('research:method-export',async(input:{projectId:string;id:string})=>{services.researchPages.get(input.projectId,input.id);const result=await dialog.showSaveDialog({title:'导出论文方法包',defaultPath:'research-method.zip',filters:[{name:'方法包',extensions:['zip']}]});if(result.canceled||!result.filePath)return null;return services.methods.exportPackage(input.projectId,input.id,result.filePath)})
   const assertProject = (projectId: string): void => projectHealth.assertAvailable(projectId)
   const projectWrite = <T>(projectId: string, action: () => T): T => { assertProject(projectId); return action() }
   const experimentWrite = <T>(id: string, action: () => T): T => projectWrite(experiments.get(id).projectId, action)
@@ -225,6 +260,7 @@ export function registerIpc(services: Services, localSession: LocalSessionServic
   })
   handle(IPC.projectUpdate, (input: { id: string; name?: string; description?: string; archived?: boolean }) => projects.update(input.id, input))
   handle(IPC.projectDelete, async (input: { id: string; deleteFiles?: boolean }) => {
+    if(researchBusy())throw new Error('请先停止研究工作台任务后删除项目。')
     if (input.deleteFiles) {
       const result = await dialog.showMessageBox({
         type: 'warning',
@@ -341,7 +377,7 @@ export function registerIpc(services: Services, localSession: LocalSessionServic
   handle(IPC.experimentDelete, (id: string) => experimentWrite(id, () => experiments.delete(id)))
   handle(IPC.experimentReadCode, (id: string) => experiments.readCode(id))
   handle(IPC.experimentSaveCode, (input: { id: string; code: string }) => experimentWrite(input.id, () => experiments.saveCode(input.id, input.code)))
-  handle(IPC.experimentRun, (id: string) => experimentWrite(id, () => runner.start(id)))
+  handle(IPC.experimentRun, (id: string) => {if(researchBusy())throw new Error('请等待研究工作台当前步骤完成。');return experimentWrite(id, () => runner.start(id))})
   handle(IPC.experimentStop, (runId: string) => runner.stop(runId))
   handle(IPC.experimentRuns, (experimentId: string) => experiments.runs(experimentId))
   handle(IPC.experimentRunGet, (runId: string) => experiments.getRun(runId))
@@ -360,12 +396,17 @@ export function registerIpc(services: Services, localSession: LocalSessionServic
   handle(IPC.chatList, (projectId: string) => chats.list(projectId))
   handle(IPC.chatCreate, (projectId: string) => {
     const appSettings = settings.get()
-    const provider = providers.defaultProvider()
-    return chats.create(projectId, provider?.id ?? appSettings.defaultProviderId, appSettings.defaultModelId || provider?.models[0]?.id || '')
+    const provider = providers.list().find((item) => item.id === appSettings.defaultProviderId) ?? providers.defaultProvider()
+    const modelId = appSettings.defaultModelId || (provider?.models.length === 1 ? provider.models[0].id : '')
+    return chats.create(projectId, provider?.id ?? appSettings.defaultProviderId, modelId)
   })
   handle(IPC.chatMessages, (chatId: string) => chats.messages(chatId))
-  handle(IPC.chatSetModel, (input: { chatId: string; providerId: string; modelId: string }) => chats.setModel(input.chatId, input.providerId, input.modelId))
-  handle(IPC.chatSend, (input: Parameters<AgentService['send']>[0]) => projectWrite(input.projectId, () => agent.send(input, () => assertProject(input.projectId))))
+  handle(IPC.chatSetModel, (input: { chatId: string; providerId: string; modelId: string }) => {
+    if (agent.isRunning() || pipeline.isRunning() || researchBusy()) throw new Error('任务正在运行，请等待完成或先停止后再切换模型。')
+    const { provider, modelId } = agent.validateSelection(input.providerId, input.modelId)
+    return chats.setModel(input.chatId, provider.id, modelId)
+  })
+  handle(IPC.chatSend, (input: Parameters<AgentService['send']>[0]) => { if(researchBusy())throw new Error('研究工作台有任务执行中，请先停止或等待。');return projectWrite(input.projectId, () => agent.send(input, () => assertProject(input.projectId))) })
   handle(IPC.chatStop, () => agent.stop())
   handle(IPC.chatAgentState, () => agent.getState())
   handle(IPC.chatDelete, (id: string) => chats.delete(id))
@@ -420,6 +461,7 @@ export function registerIpc(services: Services, localSession: LocalSessionServic
 
   handle(IPC.pipelineGet, (projectId: string) => pipeline.get(projectId))
   const preflightPipeline = (): void => {
+    if(researchBusy())throw new Error('请等待研究工作台当前步骤完成。')
     const missing = services.mcp.list().filter((server) => !server.enabled).map((server) => server.name)
     if (missing.length) throw new Error(`请先在 MCP 工具连接中启用完整科研流程所需服务：${missing.join('、')}。`)
     const python = settings.get().pythonPath.trim()

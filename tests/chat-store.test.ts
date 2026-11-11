@@ -16,6 +16,7 @@ const running = (target = a): AgentPublicState => ({ status: 'running', projectI
 const mockApi = {
   bootstrap: async (): Promise<BootstrapData> => { throw new Error('Unexpected bootstrap') },
   projects: { setActive: async (_id: string): Promise<void> => {} },
+  settings: { update: async (patch: { defaultProviderId?: string; defaultModelId?: string }) => ({ defaultProviderId: patch.defaultProviderId ?? 'provider', defaultModelId: patch.defaultModelId ?? 'model' }) },
   chat: {
     list: async (projectId: string): Promise<Chat[]> => projectId === 'p1' ? [a, b] : [c],
     messages: async (_id: string): Promise<ChatMessage[]> => [],
@@ -40,9 +41,135 @@ beforeEach(() => {
     ...initial,
     activeProjectId: 'p1', activeChatId: 'a', chats: [a, b],
     projects: [{ id: 'p1' }, { id: 'p2' }] as Project[],
-    providers: [{ id: 'provider', hasApiKey: true }] as Provider[],
+    providers: [{ id: 'provider', hasApiKey: true, models: [{ id: 'model', label: 'Model' }, { id: 'other', label: 'Other' }] }] as Provider[],
     modelSelection: { providerId: 'provider', modelId: 'model' }
   }, true)
+})
+
+test('selecting before a chat exists persists the explicit default for a restart', async () => {
+  store.setState({ activeChatId: '', chats: [] })
+  await store.getState().setChatModel('provider', 'other')
+  assert.equal(store.getState().settings?.defaultModelId, 'other')
+  assert.equal(store.getState().modelSelection.modelId, 'other')
+  assert.equal(store.getState().modelChanging, false)
+})
+
+test('changing the model persists the same chat without clearing messages or the draft', async () => {
+  store.setState({ messages: [message('history')] })
+  store.getState().setComposerText('continue the same discussion')
+  const pending = deferred<Chat>()
+  mockApi.chat.setModel = () => pending.promise
+  const request = store.getState().setChatModel('provider', 'other')
+  assert.equal(store.getState().modelChanging, true)
+  assert.equal(store.getState().modelSelection.modelId, 'model')
+  assert.equal(await store.getState().send('must wait'), false)
+  pending.resolve({ ...a, modelId: 'other' })
+  await request
+  assert.equal(store.getState().modelChanging, false)
+  assert.equal(store.getState().activeChatId, a.id)
+  assert.equal(store.getState().chats[0].dshSessionId, a.dshSessionId)
+  assert.equal(store.getState().modelSelection.modelId, 'other')
+  assert.deepEqual(store.getState().messages.map(m => m.id), ['history'])
+  assert.equal(store.getState().composerDraft, 'continue the same discussion')
+})
+
+test('failed model persistence leaves the confirmed selection unchanged', async () => {
+  mockApi.chat.setModel = async () => { throw new Error('save failed') }
+  await store.getState().setChatModel('provider', 'other')
+  assert.equal(store.getState().modelSelection.modelId, 'model')
+  assert.equal(store.getState().chats[0].modelId, 'model')
+  assert.equal(store.getState().modelChanging, false)
+})
+
+test('late model save updates only its originating chat after navigation', async () => {
+  const pending = deferred<Chat>()
+  mockApi.chat.setModel = () => pending.promise
+  const request = store.getState().setChatModel('provider', 'other')
+  await store.getState().selectChat('b')
+  pending.resolve({ ...a, modelId: 'other' })
+  await request
+  assert.equal(store.getState().activeChatId, 'b')
+  assert.equal(store.getState().modelSelection.modelId, 'model')
+  assert.equal(store.getState().chats.find(c => c.id === 'a')?.modelId, 'other')
+})
+
+test('model changes are rejected while a reply is running or a send is pending', async () => {
+  let calls = 0
+  mockApi.chat.setModel = async (...args) => { calls++; return defaults.setModel(...args) }
+  store.setState({ agentState: running() })
+  await store.getState().setChatModel('provider', 'other')
+  store.setState({ agentState: null, pendingSend: { projectId: 'p1', chatId: 'a' } })
+  await store.getState().setChatModel('provider', 'other')
+  assert.equal(calls, 0)
+  assert.equal(store.getState().modelSelection.modelId, 'model')
+})
+
+test('older chat lists cannot replace a confirmed model change', async () => {
+  const list = deferred<Chat[]>()
+  mockApi.chat.list = () => list.promise
+  const loading = store.getState().loadChats()
+  await store.getState().setChatModel('provider', 'other')
+  list.resolve([a, b])
+  await loading
+  assert.equal(store.getState().modelSelection.modelId, 'other')
+  assert.equal(store.getState().chats[0].modelId, 'other')
+})
+
+test('model confirmation after project roundtrip reconciles the active chat', async () => {
+  const saved = deferred<Chat>()
+  mockApi.chat.setModel = () => saved.promise
+  const switching = store.getState().setChatModel('provider', 'other')
+  await store.getState().openProject('p2')
+  await store.getState().openProject('p1')
+  saved.resolve({ ...a, modelId: 'other' })
+  await switching
+  assert.equal(store.getState().activeChatId, 'a')
+  assert.equal(store.getState().modelSelection.modelId, 'other')
+})
+
+test('new chat preparation blocks competing model changes and sends', async () => {
+  const created = deferred<Chat>()
+  mockApi.chat.create = () => created.promise
+  let switches = 0
+  mockApi.chat.setModel = async (...args) => { switches++; return defaults.setModel(...args) }
+  const creating = store.getState().newChat()
+  await store.getState().setChatModel('provider', 'other')
+  assert.equal(await store.getState().send('blocked'), false)
+  assert.equal(switches, 0)
+  created.resolve(chat('created'))
+  await creating
+  assert.equal(store.getState().modelSelection.modelId, 'model')
+  assert.equal(store.getState().pendingSend, null)
+})
+
+test('model save in one project does not invalidate another project chat list', async () => {
+  const saved = deferred<Chat>()
+  const list = deferred<Chat[]>()
+  mockApi.chat.setModel = () => saved.promise
+  const switching = store.getState().setChatModel('provider', 'other')
+  mockApi.chat.list = id => id === 'p2' ? list.promise : Promise.resolve([a, b])
+  const navigating = store.getState().openProject('p2')
+  await Promise.resolve(); await Promise.resolve()
+  saved.resolve({ ...a, modelId: 'other' })
+  await switching
+  list.resolve([c])
+  await navigating
+  assert.equal(store.getState().activeProjectId, 'p2')
+  assert.equal(store.getState().activeChatId, 'c')
+})
+
+test('preparing a default-model chat without a key does not require a redundant model update', async () => {
+  store.setState({ providers: [{ id: 'provider', hasApiKey: false, models: [{ id: 'model', label: 'Model' }] }] as Provider[] })
+  mockApi.chat.setModel = async () => { throw new Error('No key for model validation') }
+  assert.equal(await store.getState().newChat(), true)
+  assert.equal(store.getState().activeChatId, 'created')
+})
+
+test('late stream frames cannot recreate an answer after the turn is stored and idle', () => {
+  store.setState({ agentState: { ...running(), status: 'idle' }, messages: [{ ...message('answer'), role: 'assistant', content: 'finished' }] })
+  store.getState().handleEvent({ type: 'agent-stream', projectId: 'p1', sessionId: a.dshSessionId, frame: { type: 'chunk', chunk: { type: 'text-delta', text: 'finished' } } } as AppEvent)
+  assert.equal(store.getState().streaming, null)
+  assert.equal(store.getState().messages.length, 1)
 })
 
 test('explicit dedicated task sends once with selected model and preserves original composer draft', async () => {

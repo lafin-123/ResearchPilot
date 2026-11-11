@@ -14,6 +14,7 @@ import { useAuth } from '../components/AuthGate'
 import { writingSessionCache } from '../lib/writing-session'
 import { useAppStore } from '../store/app'
 import { Badge, Button, Field, Input, Modal, PageHeader, Select, Textarea } from '../components/Ui'
+import { WritingTonePanel } from '../components/WritingTonePanel'
 import './writing-quality.css'
 
 interface SourceDraft extends SimilaritySource { id: string; label: string }
@@ -311,9 +312,15 @@ function WritingQualityWorkspace({ accountId, projectId }: { accountId: string; 
         </article>)}</div>}
       </section> : null}
 
+      <WritingTonePanel projectId={projectId} text={draft} protectedTerms={constraints.protectedTerms} context={constraints.context} disabled={!!busy} revisionText={revised} onAdopt={(text) => {
+        setRevised(text); setSavedRevision(null)
+        const terms = constraints.protectedTerms.split(/[,，;；\n]+/u).map(value => value.trim()).filter(Boolean)
+        setRevision({ original: draft, revised: text, terms: constraints.protectedTerms, report: checkRewritePreservation(draft, text, terms) })
+      }} />
+
       <section className="wq-rewrite" aria-labelledby="wq-rewrite-heading">
-        <div className="wq-section-heading"><h2 id="wq-rewrite-heading">准备有约束的 AI 修订</h2><Badge>尚未执行改写</Badge></div>
-        <p className="wq-lead">先确认你要表达的意思。下面的约束会和原文一起放入新会话，供你审阅后发送给所选模型；此页面不会生成示例改写冒充真实结果。</p>
+        <div className="wq-section-heading"><h2 id="wq-rewrite-heading">也可在智能体中审阅</h2><Badge>只准备会话请求</Badge></div>
+        <p className="wq-lead">先检查原文，再生成可审阅的修订。需要多轮讨论时，也可以把下面的约束和原文放入新会话；此操作只准备请求，不自动发送。</p>
         <div className="wq-two-fields">
           <Field label="修订目标"><Select value={constraints.goal} onChange={(event) => setConstraints((current) => ({ ...current, goal: event.target.value as RewriteConstraints['goal'] }))}><option value="clarity">学术表达：具体、简洁，减少套语</option><option value="ethical-paraphrase">规范转述：重组论证，保留来源归属</option></Select></Field>
           <Field label="输出语言"><Select value={constraints.outputLanguage} onChange={(event) => setConstraints((current) => ({ ...current, outputLanguage: event.target.value as RewriteConstraints['outputLanguage'] }))}><option value="original">保持原文语言</option><option value="zh">中文</option><option value="en">English</option></Select></Field>

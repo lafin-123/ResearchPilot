@@ -14,7 +14,8 @@ export interface ResearchSkill {
 }
 
 // Each row is an independently scoped method contract, not a claim of installed analysis software.
-const legacy = `paper-writing|论文写作|writing|真实稿件和证据清单|可追溯论文草稿|无结果不能写成已完成研究|建立主张证据表；按章节组织；核验数字与引用
+const legacy = `lieflat-less-ai-tone|学术表达去套路|writing|待修订论文与术语保留要求|分级表达诊断、最小改写与前后复核|保留数据、术语、引用和科学含义，不以文风判断作者|只读诊断和候选复核；采用建议后最小改写；复测并检查保留信息
+paper-writing|论文写作|writing|真实稿件和证据清单|可追溯论文草稿|无结果不能写成已完成研究|建立主张证据表；按章节组织；核验数字与引用
 experiment-design|实验设计与执行|design|问题、数据和预算|实验协议与运行记录|执行仍需审批|预定终点；建立公平对照；记录失败与种子
 plotting|出版级图表|figures|真实运行产物|图稿与图注|不能编造误差棒|明确图形问题；检查数值单位；追溯数据来源
 literature-review|文献调研|literature|研究问题和已有来源|证据综述|元数据不代表全文|构建检索范围；筛选来源；综合支持与争议

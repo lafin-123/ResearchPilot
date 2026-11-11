@@ -91,57 +91,70 @@ export class ProviderService {
     const baseUrl = normalizeProviderBase(input.baseUrl ?? existing?.base_url ?? (input.kind === 'deepseek' ? 'https://api.deepseek.com' : ''), input.protocol)
     let id = input.id ?? (input.kind === 'deepseek' ? 'deepseek-official' : slugify(name, 'provider'))
     if (!/^[a-z][a-z0-9-]*$/.test(id)) id = `p-${id.replace(/[^a-z0-9-]/g, '-')}`
+    const current = this.settings.get()
+    const isDefault = input.isDefault ?? (existing?.is_default === 1 || current.defaultProviderId === id)
+    const explicitModel = input.defaultModelId?.trim()
+    if (input.defaultModelId !== undefined && !input.models.some((model) => model.id === explicitModel)) {
+      throw new Error('默认模型不在提供方的已选模型列表中，请重新选择。')
+    }
+    const retainedModel = current.defaultProviderId === id && input.models.some((model) => model.id === current.defaultModelId)
+      ? current.defaultModelId : ''
+    const defaultModelId = explicitModel || retainedModel || (input.models.length === 1 ? input.models[0].id : '')
+    if (isDefault && !defaultModelId) throw new Error('请明确选择默认模型；多个模型不会自动使用列表第一项。')
     const keyEnc = input.apiKey ? encryptSecret(input.apiKey) : existing?.api_key_enc ?? ''
     const timestamp = nowIso()
-    if (existing) {
-      this.db.run(
-        `UPDATE providers SET name = ?, kind = ?, protocol = ?, base_url = ?, api_key_enc = ?, models_json = ?, is_default = ?, updated_at = ? WHERE id = ?`,
-        name,
-        input.kind,
-        input.protocol,
-        baseUrl,
-        keyEnc,
-        JSON.stringify(input.models),
-        input.isDefault === undefined ? existing.is_default : input.isDefault ? 1 : 0,
-        timestamp,
-        id
-      )
-    } else {
-      this.db.run(
-        `INSERT INTO providers (id, name, kind, protocol, base_url, api_key_enc, models_json, is_default, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        id,
-        name,
-        input.kind,
-        input.protocol,
-        baseUrl,
-        keyEnc,
-        JSON.stringify(input.models),
-        input.isDefault ? 1 : 0,
-        timestamp,
-        timestamp
-      )
-    }
-    if (input.isDefault) {
-      this.db.run('UPDATE providers SET is_default = 0 WHERE id <> ?', id)
-      const provider = this.get(id)
-      this.settings.update({ defaultProviderId: provider.id, defaultModelId: provider.models[0]?.id ?? '' })
-    }
-    if (!this.db.scalar<number>('SELECT COUNT(*) FROM providers WHERE is_default = 1')) {
-      this.db.run('UPDATE providers SET is_default = 1 WHERE id = ?', id)
-    }
-    return this.get(id)
+    return this.db.transaction(() => {
+      if (existing) {
+        this.db.run(
+          `UPDATE providers SET name = ?, kind = ?, protocol = ?, base_url = ?, api_key_enc = ?, models_json = ?, is_default = ?, updated_at = ? WHERE id = ?`,
+          name,
+          input.kind,
+          input.protocol,
+          baseUrl,
+          keyEnc,
+          JSON.stringify(input.models),
+          isDefault ? 1 : 0,
+          timestamp,
+          id
+        )
+      } else {
+        this.db.run(
+          `INSERT INTO providers (id, name, kind, protocol, base_url, api_key_enc, models_json, is_default, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          id,
+          name,
+          input.kind,
+          input.protocol,
+          baseUrl,
+          keyEnc,
+          JSON.stringify(input.models),
+          isDefault ? 1 : 0,
+          timestamp,
+          timestamp
+        )
+      }
+      if (isDefault) {
+        this.db.run('UPDATE providers SET is_default = 0 WHERE id <> ?', id)
+        this.settings.update({ defaultProviderId: id, defaultModelId })
+      } else if (current.defaultProviderId === id || existing?.is_default === 1) {
+        this.settings.update({ defaultProviderId: '', defaultModelId: '' })
+      }
+      return this.get(id)
+    })
   }
 
   delete(id: string): void {
     const provider = this.get(id)
-    if (provider.isDefault && this.list().length > 1) throw new Error('不能删除当前默认提供方，请先切换默认模型。')
-    this.db.run('DELETE FROM providers WHERE id = ?', id)
-    const next = this.list()[0]
-    if (next) {
-      this.db.run('UPDATE providers SET is_default = 1 WHERE id = ?', next.id)
-      this.settings.update({ defaultProviderId: next.id, defaultModelId: next.models[0]?.id ?? '' })
-    }
+    const isDefault = provider.isDefault || this.settings.get().defaultProviderId === id
+    this.db.transaction(() => {
+      this.db.run('DELETE FROM providers WHERE id = ?', id)
+      if (!isDefault) return
+      const remaining = this.list()
+      const next = remaining.length === 1 && remaining[0].models.length === 1 ? remaining[0] : undefined
+      this.db.run('UPDATE providers SET is_default = 0')
+      if (next) this.db.run('UPDATE providers SET is_default = 1 WHERE id = ?', next.id)
+      this.settings.update({ defaultProviderId: next?.id ?? '', defaultModelId: next?.models[0].id ?? '' })
+    })
   }
 
   private preview(input: { id?: string; apiKey?: string; provider?: ProviderInput }): { provider: Provider; key: string } {
@@ -170,7 +183,7 @@ export class ProviderService {
   }
 
   defaultProvider(): Provider | undefined {
-    return this.list().find((provider) => provider.isDefault) ?? this.list()[0]
+    return this.list().find((provider) => provider.isDefault)
   }
 
   dshProviderId(provider: Provider): string {

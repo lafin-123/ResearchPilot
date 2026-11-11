@@ -26,6 +26,9 @@ import { fetchJournalGuidelines } from '../lib/research-sources'
 import type { ProjectSyncResult } from '../../shared/project-health'
 import { assertProjectPathSafe, assertProjectRootAvailable, projectHealthError, type ProjectHealthService } from './project-health'
 
+import type { ResearchWorkspaceService } from './research-workspaces'
+import type { ResearchMethodService } from './research-methods'
+
 type Params = Record<string, unknown>
 
 interface RpcBody {
@@ -48,6 +51,8 @@ function requiredString(value: unknown, name: string): string {
 }
 
 export class BridgeService {
+  private researchServices: { pages: ResearchWorkspaceService; methods: ResearchMethodService; busy: () => boolean } | null = null
+  setResearchServices(pages:ResearchWorkspaceService,methods:ResearchMethodService,busy:()=>boolean):void { this.researchServices={pages,methods,busy} }
   private server: Server | undefined
   private token = ''
   private port = 0
@@ -271,7 +276,14 @@ export class BridgeService {
         if (mutatesProject) this.assertProjectAvailable(grant.projectId)
       }
       assertOperation()
-      const result = isMcpAction(grant.serverId, name)
+      let result:unknown
+      if(['paper_method_list','paper_method_inspect','paper_method_run'].includes(name)){
+        if(!this.researchServices)throw new Error('内置论文方法服务尚未就绪。')
+        const {pages,methods}=this.researchServices
+        if(name==='paper_method_list')result=pages.list(grant.projectId).filter(item=>item.kind==='method')
+        else if(name==='paper_method_inspect'){const page=pages.get(grant.projectId,String(args.id));if(page.kind!=='method')throw new Error('不是论文方法工作页。');result={id:page.id,topic:page.topic,sourceBinding:page.method.sourceBinding,fields:page.method.fields,codeHash:page.method.codeHash,tests:page.method.tests}}
+        else result=await methods.run({projectId:grant.projectId,id:String(args.id),inputs:args.inputs as Record<string,unknown>,expected:args.expected as Record<string,number>|undefined,timeoutSeconds:Number(args.timeoutSeconds??60)})
+      }else result = isMcpAction(grant.serverId, name)
         ? await this.dispatchMcpAction(name, args, grant.projectId, assertOperation, controller.signal)
         : await new McpToolService({ projects: this.projects, documents: this.documents, references: this.references, experiments: this.experiments, figures: this.figures }).call(grant.serverId, name, args, grant.projectId, controller.signal)
       assertScope()
@@ -286,6 +298,7 @@ export class BridgeService {
   }
 
   private async dispatchMcpAction(name: string, args: Params, projectId: string, assertScope: () => void, signal: AbortSignal): Promise<unknown> {
+    if(this.researchServices?.busy())throw new Error('研究工作台有任务执行中，请等待或停止。')
     const project = this.projects.get(projectId)
     const hash = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex')
     const approve = async (title: string, description: string, details: string, risk: 'medium' | 'high' = 'medium'): Promise<void> => {

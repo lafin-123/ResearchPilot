@@ -24,12 +24,12 @@ const GATED_TOOLS = new Set([
 const READ_ONLY_MCP = new Set([
   ...['workspace_inventory', 'reference_search', 'reference_read', 'reference_fulltext', 'evidence_read'].map(name => `mcp__rp_evidence__${name}`),
   ...['manuscript_list', 'manuscript_read', 'manuscript_audit', 'local_similarity'].map(name => `mcp__rp_writing__${name}`),
-  ...['experiment_runs', 'run_reproducibility', 'figure_list', 'figure_inspect', 'artifact_read'].map(name => `mcp__rp_artifacts__${name}`)
+  ...['experiment_runs', 'run_reproducibility', 'figure_list', 'figure_inspect', 'artifact_read', 'paper_method_list', 'paper_method_inspect'].map(name => `mcp__rp_artifacts__${name}`)
 ])
 
 // These exact native capabilities perform their own mandatory, scoped desktop approval.
 const BRIDGE_APPROVED_MCP = new Set([
-  ...['experiment_run', 'figure_create_from_spec', 'project_artifact_write', 'experiment_create', 'figure_create_spec'].map(name => `mcp__rp_artifacts__${name}`),
+  ...['experiment_run', 'paper_method_run', 'figure_create_from_spec', 'project_artifact_write', 'experiment_create', 'figure_create_spec'].map(name => `mcp__rp_artifacts__${name}`),
   ...['literature_search', 'journal_guidelines_fetch', 'reference_add_doi', 'reference_save_reading_draft'].map(name => `mcp__rp_evidence__${name}`),
   'mcp__rp_writing__manuscript_write'
 ])

@@ -26,6 +26,14 @@ interface StageDefinition extends PipelineStage {
   buildPrompt: (context: { topic: string; formats: DocumentFormat[]; previous: string; documentIds: Record<string, string> }) => string
 }
 
+const ACADEMIC_TONE_INSTRUCTIONS = `ACADEMIC TONE REVIEW
+Load lieflat-less-ai-tone and read lieflat-less-ai-tone/references/academic-adaptation.md from the bundled skills directory alongside paper-writing. Use the academic adaptation for scientific writing and polishing, not mechanical deletion of rhetorical patterns.
+- Existing manuscripts: diagnose and propose first; wait until the user accepts the proposal before any revision. Read the target manuscript first; a reused document ID or pipeline auto-run is not consent.
+- New drafts generated in the same writing task may undergo within-task tone check/revise; do not assume a prior stage's or a retried task's manuscript is a new draft. Preserve the original draft and traceable records of candidates, decisions/reasons, before/after changes and rechecks at distinct exports/ paths using approved project_artifact_write calls. Never overwrite the original or earlier review records.
+- Preserve data, units, sample sizes, citations and attribution, negation, causal strength, uncertainty, terminology, formulas, code and document structure. Make only safe minimal changes; retain uncertain passages and report concerns. If preservation checks fail, do not replace the current manuscript; keep the proposal and diff for review.
+- If Python is unavailable or detection did not successfully run, do not claim script detection or invent metrics. Label model-only observations and disclose unperformed checks; distinguish actual script candidates, model judgments and human review. Style statistics are heuristics, not an AI probability or proof of authorship; never promise detector acceptance.
+Use native tools and their individual approvals only; loading the skill does not authorize shell scripts. These tone instructions add no application-enforced artifact gate.`
+
 const STAGES: StageDefinition[] = [
   {
     id: 'literature',
@@ -156,6 +164,8 @@ ${previous || '(none)'}
 
 Requested formats: ${formats.join(', ') || 'docx, latex'}.
 
+${ACADEMIC_TONE_INSTRUCTIONS}
+
 Load the paper-writing skill. Read:
 - references/research-brief.md
 - experiments/plan.md
@@ -165,7 +175,7 @@ Load the paper-writing skill. Read:
 
 Build a claims–evidence map at exports/claims-evidence.md first. Include actual registered chart previews as standalone Markdown images ![caption](figures/.../figure.svg) using returned project-relative paths; the document service embeds their verified structured rendering. Keep separate editable PPTX deliverables and report uncertainty in captions/tables. Then write a complete manuscript with abstract, introduction, related work, method, experimental setup, results, discussion, limitations, conclusion, and real citations. Every empirical number must trace to a run ID; every citation must exist in the project library or a verified DOI. Label anything unverified as TODO rather than inventing it.
 
-For each requested format:
+For each requested format, write only a new draft or a revision allowed by the acceptance policy above:
 ${formats.includes('docx') ? `- DOCX document id: ${documentIds.docx ?? '(none)'}. Use mcp__rp_writing__manuscript_write({id,markdown}) with the complete manuscript. This creates an actual DOCX through the native document service.` : ''}
 ${formats.includes('latex') ? `- LaTeX document id: ${documentIds.latex ?? '(none)'}. Use manuscript_write({id,markdown}) with complete TeX source in markdown. Native tool does not compile TeX; disclose that compilation remains unverified, do not invoke shell.` : ''}
 
@@ -182,6 +192,8 @@ Finish with the document IDs, compile status, word counts, and a list of unresol
 Previous stage summary:
 ${previous || '(none)'}
 
+${ACADEMIC_TONE_INSTRUCTIONS}
+
 Load peer-review, citation-audit and reproducibility for methodology, but do not call shell scripts. Use native manuscript_read, reference_read, run_reproducibility, figure_inspect and artifact_read. Author a registered review/audit Python experiment with experiment_create and execute with experiment_run. It must mechanically compare actual manuscript source/numbers/citation IDs and DOI strings against retrieved records and actual run data, check file hashes/metadata and report discrepancies. Save real emitted JSON in its run directory, read it, then copy exact audit output to exports/citation-audit.json and exports/reproducibility.json using project_artifact_write. Mechanical reports may use version=1,status='passed',blockers=[] only for checks performed and passed; include scope='mechanical', source paths, audit run ID and humanReviewRequired=true. A local reference/DOI match is NOT full-text authenticity, sentence support or human review. Do not set supportReviewed=true or claim a human reviewed it. Record full-text/source-support and scientific validity as unresolved human checks in limitations, with quotes only from genuinely available abstracts. Unsupported factual source claims must be removed or qualified rather than waved through. Reproducibility metadata inventory is not a rerun; if claiming a rerun, actually run the experiment and compare outputs.
 Act as a rigorous reviewer. Audit the manuscript and its evidence:
 1. Every empirical claim must trace to a run ID.
@@ -191,7 +203,7 @@ Act as a rigorous reviewer. Audit the manuscript and its evidence:
 5. Check reproducibility: seeds, n, compute, code and artifact paths.
 6. Check LaTeX compile logs or DOCX structure.
 
-Write a review report to exports/review-report.md with severity-ranked findings. Then revise the manuscript using the paper-writing skill:
+Write a review report to exports/review-report.md with severity-ranked findings, tone proposals and their acceptance status. For existing manuscripts, stop after proposing revisions until the user accepts; only then revise using paper-writing under the academic tone policy above. Keep original sources and traceable review/change records even for within-task new drafts:
 ${documentIds.docx ? `- DOCX id: ${documentIds.docx}` : ''}
 ${documentIds.latex ? `- LaTeX id: ${documentIds.latex}` : ''}
 
@@ -442,7 +454,7 @@ export class PipelineService {
     }
     const settings = this.settings.get()
     const roleModels = normalizeAgentRoles(settings.agentRoleModels)
-    const allRolesConfigured = AGENT_ROLES.every(role => roleModels[role.id])
+    const allRolesConfigured = ['writing','figures','engineering'].every(role => roleModels[role as keyof typeof roleModels])
     const fallback = allRolesConfigured ? roleModels.writing! : { providerId: input.providerId || settings.defaultProviderId, modelId: input.modelId || settings.defaultModelId }
     const selection = this.agent.validateSelection(fallback.providerId, fallback.modelId)
     for (const route of Object.values(roleModels)) this.agent.validateSelection(route.providerId, route.modelId)

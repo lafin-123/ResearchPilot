@@ -69,6 +69,21 @@ button:disabled { cursor: not-allowed; }
 .status-pill { border: 0; background: none; font-family: var(--font-ui); font-size: 10px; }
 .status-dot.running { background: var(--ink-3); box-shadow: none; }
 
+.workspace-nav { display: flex; flex: 0 0 auto; align-items: center; gap: 22px; padding: 0 30px; min-height: 43px; border-bottom: 1px solid var(--line); background: var(--main); overflow-x: auto; }
+.workspace-nav-link { display: inline-flex; align-items: center; align-self: stretch; flex-shrink: 0; min-height: 43px; padding: 0 1px; border-bottom: 2px solid transparent; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.workspace-nav-link:hover { color: var(--ink); }
+.workspace-nav-link.active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+.side-utilities > a.active { color: var(--ink); font-weight: 600; }
+@media (max-width: 600px) { .workspace-nav { padding: 0 14px; gap: 19px; } }
+
+.chat-model-picker { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 58%; color: var(--muted); font-size: 11px; }
+.chat-model-picker > span { flex-shrink: 0; }
+.chat-model-picker select { min-width: 0; max-width: 290px; height: 29px; border: 0; border-radius: 5px; padding: 0 6px; background: var(--panel-2); color: var(--ink); text-overflow: ellipsis; }
+.chat-model-picker select:disabled { color: var(--muted); }
+.assistant-dock .chat-model-picker { max-width: 70%; }
+.assistant-dock .chat-model-picker > span { display: none; }
+@media (max-width: 600px) { .chat-model-picker { max-width: 70%; } .composer-actions .composer-hint { display: none; } }
+
 /* Shared controls keep the existing tool pages in the same neutral language. */
 .content { background: var(--bg); padding: 25px 30px 36px; }
 .page { animation: none; max-width: 1240px; }

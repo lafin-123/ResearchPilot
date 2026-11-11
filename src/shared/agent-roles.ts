@@ -2,7 +2,9 @@ import type { Provider } from './types'
 export const AGENT_ROLES = [
   { id: 'writing', label: '写作 Agent', description: '文献综合、论文写作、期刊修订与审阅。' },
   { id: 'figures', label: '绘图 Agent', description: '图形设计、图注和可编辑科研图表。' },
-  { id: 'engineering', label: '工程与实验 Agent', description: '研究设计、代码实现、实验执行与分析。' }
+  { id: 'engineering', label: '工程与实验 Agent', description: '研究设计、代码实现、实验执行与分析。' },
+  { id: 'coordinator', label: '科研导师与主持', description: '评估研究进度、组织多视角提问与下一步行动。' },
+  { id: 'reviewer', label: '独立审阅 Agent', description: '独立检查稿件、来源与方法验证记录。' }
 ] as const
 export type AgentRole = typeof AGENT_ROLES[number]['id']
 export interface RoleModel { providerId: string; modelId: string }

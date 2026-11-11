@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { join, resolve } from 'node:path'
 import { _electron as electron } from 'playwright-core'
+import { navigateWorkspace } from './workspace-navigation.mjs'
 
 const require = createRequire(import.meta.url)
 const root = resolve(import.meta.dirname, '..')
@@ -20,7 +21,7 @@ async function launch() {
   await page.waitForSelector('.research-home', { timeout: 60000 })
 }
 async function skills() {
-  await page.locator('.sidebar a[href="#/skills"]').click()
+  await navigateWorkspace(page, '/skills')
   await page.waitForFunction(() => document.querySelectorAll('.skill-row').length >= 100)
 }
 try {
@@ -30,10 +31,10 @@ try {
   const projectId = initial.activeProjectId
   await skills()
   const listed = await page.evaluate(id => window.researchpilot.skills.list(id), projectId)
-  assert.equal(listed.filter(s => s.scope === 'builtin').length, 106)
-  assert.equal(await page.locator('.skill-row').count(), 106)
+  assert.equal(listed.filter(s => s.scope === 'builtin').length, 107)
+  assert.equal(await page.locator('.skill-row').count(), 107)
   await page.screenshot({ path: join(runDir, '01-library.png'), fullPage: true })
-  record('Actual application discovers 106 bundled skills and category navigation')
+  record('Actual application discovers 107 bundled skills and category navigation')
   await page.getByRole('button', { name: /文献与全文核对/ }).click()
   await page.getByLabel('搜索科研技能').fill('全文')
   await page.waitForFunction(() => document.querySelectorAll('.skill-row').length >= 4 && document.querySelectorAll('.skill-row').length < 15)
@@ -58,7 +59,7 @@ try {
   assert.match(draft, /审批/)
   assert.notEqual((await page.evaluate(() => window.researchpilot.chat.state())).status, 'running')
   record('Empty optional fields prepare a journal revision draft with per-task mode and never send')
-  await page.locator('.sidebar a[href="#/skills"]').click()
+  await navigateWorkspace(page, '/skills')
   await page.getByLabel('搜索科研技能').fill('forest-plot')
   await page.locator('.skill-row').getByRole('button', { name: '准备任务', exact: true }).click()
   let handled = false
@@ -73,7 +74,7 @@ try {
     await window.researchpilot.skills.create({ projectId: id, scope: 'project', name: 'custom-lab-method', description: '自定义实验室方法', whenToUse: '本地自定义流程', body: '# Custom fixture\nDo not execute anything.' })
     await window.researchpilot.skills.copyBuiltin(id, 'journal-revision', 'project')
   }, projectId)
-  await page.locator('.sidebar a[href="#/skills"]').click()
+  await navigateWorkspace(page, '/skills')
   await page.getByRole('button', { name: /自定义技能/ }).click()
   await page.waitForFunction(() => document.querySelectorAll('.skill-row').length === 1)
   assert.match(await page.locator('.skill-row').textContent(), /custom-lab-method/)
@@ -111,8 +112,8 @@ try {
   await page.getByRole('button', { name: '放入助手草稿', exact: true }).click()
   await page.locator('.composer-box textarea').waitFor()
   assert.match(await page.locator('.composer-box textarea').inputValue(), /绘图 Agent/)
-  const activeModel = await page.getByLabel('当前研究模型').inputValue()
-  assert.equal(activeModel, `${roleProviders[1].id}::figures-model`)
+  const activeModel = await page.getByLabel('本轮模型', { exact: true }).inputValue()
+  assert.equal(activeModel, JSON.stringify([roleProviders[1].id, 'figures-model']))
   assert.notEqual((await page.evaluate(() => window.researchpilot.chat.state())).status, 'running')
   record('Figure skill prepares an independent role chat with configured API/model and no paid call')
   await skills()

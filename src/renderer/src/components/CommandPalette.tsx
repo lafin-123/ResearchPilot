@@ -2,18 +2,12 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Beaker,
-  BookOpen,
-  Bot,
-  ChartNoAxesCombined,
   FileText,
-  FlaskConical,
   FolderOpen,
-  MessageSquarePlus,
-  Settings,
-  Sparkles,
-  Workflow
+  MessageSquarePlus
 } from 'lucide-react'
 import { useAppStore } from '../store/app'
+import { PRIMARY_WORKSPACES, SETTINGS_WORKSPACE } from '../lib/workspace-navigation'
 
 interface Item {
   id: string
@@ -34,19 +28,10 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const items = useMemo<Item[]>(() => {
     const go = (to: string) => () => { onClose(); navigate(to) }
     return [
-      { id: 'home', group: '导航', label: '研究工作台', icon: <Beaker />, keywords: 'home dashboard 首页 工作台', run: go('/') },
-      { id: 'agent', group: '导航', label: '研究助手', icon: <Bot />, keywords: 'agent chat 对话 任务', run: go('/agent') },
-      { id: 'library', group: '导航', label: '文献库', icon: <BookOpen />, keywords: 'library references 文献', run: go('/library') },
-      { id: 'writing', group: '导航', label: '论文工作台', icon: <FileText />, keywords: 'paper writing 论文 文档', run: go('/writing') },
-      { id: 'experiments', group: '导航', label: '实验台', icon: <FlaskConical />, keywords: 'experiment runs 实验', run: go('/experiments') },
-      { id: 'figures', group: '导航', label: '图表库', icon: <ChartNoAxesCombined />, keywords: 'figures plots 图表', run: go('/figures') },
-      { id: 'pipeline', group: '导航', label: '研究流水线', icon: <Workflow />, keywords: 'pipeline workflow 流水线', run: go('/pipeline') },
-      { id: 'skills', group: '导航', label: '技能', icon: <Sparkles />, keywords: 'skills 技能 安装', run: go('/skills') },
-      { id: 'notes', group: '导航', label: '研究笔记与页面关联', icon: <FileText />, keywords: 'notes 笔记 收藏 链接 回收站', run: go('/notes') },
-      { id: 'knowledge', group: '导航', label: '项目知识库与阅读记录', icon: <BookOpen />, keywords: 'RAG 共享上下文 阅读 记录 检索 知识库', run: go('/knowledge') },
-      { id: 'writing-quality', group: '导航', label: '写作质量与规范改写', icon: <FileText />, keywords: '降重 查重 重复 知网 维普 style similarity', run: go('/writing-quality') },
-      { id: 'mcp', group: '导航', label: 'MCP 工具连接', icon: <Workflow />, keywords: 'mcp 工具 连接', run: go('/mcp') },
-      { id: 'settings', group: '导航', label: '设置', icon: <Settings />, keywords: 'settings api key 设置', run: go('/settings') },
+      ...[...PRIMARY_WORKSPACES, SETTINGS_WORKSPACE].flatMap(workspace => workspace.pages.map(page => ({
+        id: page.path, group: '导航', label: `${workspace.label} / ${page.label}`, icon: <FileText />,
+        keywords: `${workspace.label} ${page.keywords}`, run: go(page.path)
+      }))),
       {
         id: 'new-chat',
         group: '操作',

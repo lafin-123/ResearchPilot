@@ -53,6 +53,37 @@ import type { PdfAnnotation, PdfAnnotationCreate, PdfAnnotationUpdate, PdfOpenRe
 import type { BackupExportResult, BackupPreview, BackupRestoreResult } from './backups'
 
 export interface ResearchPilotApi {
+  paperContext: {
+    get(projectId: string, documentId: string): Promise<import('./paper-context').PaperSnapshot>
+    save(projectId: string, memory: import('./paper-context').PaperMemory): Promise<import('./paper-context').PaperSnapshot>
+    activate(projectId: string, documentId: string): Promise<import('./paper-context').PaperSnapshot>
+    deactivate(projectId: string): Promise<void>
+    link(input: import('./paper-context').PaperSourceInput): Promise<import('./paper-context').PaperSnapshot>
+    unlink(projectId: string, documentId: string, sourceId: string): Promise<import('./paper-context').PaperSnapshot>
+    refresh(projectId: string, documentId: string): Promise<import('./paper-context').PaperSnapshot>
+    compose(input: import('./paper-context').PaperContextInput): Promise<import('./paper-context').PaperContextResult>
+  }
+  writingTone: {
+    inspect(input: import('./writing-tone').ToneReviewInput, operationId?: string): Promise<import('./writing-tone').ToneDetection>
+    review(input: import('./writing-tone').ToneReviewInput, operationId?: string): Promise<import('./writing-tone').ToneReview>
+    stop(operationId?: string): Promise<void>
+  }
+  research: {
+    list(projectId: string): Promise<Array<{id:string;topic:string;kind:import('./research-workflows').ResearchKind;updatedAt:string;revision:number}>>
+    create(projectId:string,kind:import('./research-workflows').ResearchKind,topic:string): Promise<import('./research-workflows').ResearchWorkspace>
+    get(projectId:string,id:string): Promise<import('./research-workflows').ResearchWorkspace>
+    save(projectId:string,workspace:import('./research-workflows').ResearchWorkspace): Promise<import('./research-workflows').ResearchWorkspace>
+    remove(projectId:string,id:string): Promise<void>
+    collect(projectId:string,id:string,referenceId:string,pdfPage?:number): Promise<import('./research-workflows').ResearchWorkspace>
+    run(projectId:string,id:string,operation:import('./research-workflows').ResearchOperation,automatic?:boolean,maxCalls?:number): Promise<import('./research-workflows').ResearchWorkspace>
+    stop(projectId:string,id:string): Promise<void>
+    tasks(projectId:string,id:string): Promise<import('./research-workflows').ResearchTask[]>
+    exportDoc(projectId:string,id:string): Promise<DocumentRecord>
+    runMethod(input:{projectId:string;id:string;inputs:Record<string,unknown>;expected?:Record<string,number>;tolerance?:number;timeoutSeconds?:number}): Promise<import('./research-workflows').MethodTest>
+    methodSource(projectId:string,id:string,local?:boolean): Promise<import('./research-workflows').ResearchWorkspace|null>
+    methodEnvironment(projectId:string,id:string): Promise<import('./research-workflows').ResearchWorkspace>
+    exportMethod(projectId:string,id:string): Promise<{path:string;sha256:string;ready:boolean}|null>
+  }
   backups: {
     exportProject(projectId: string): Promise<BackupExportResult | null>
     inspect(): Promise<BackupPreview | null>

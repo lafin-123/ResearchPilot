@@ -23,9 +23,10 @@ interface ProviderDraft {
   modelMetadata?: ModelInfo[]
   modelMode?: 'upstream' | 'manual'
   isDefault: boolean
+  defaultModelId: string
 }
 
-function providerDraft(provider?: Provider): ProviderDraft {
+function providerDraft(provider?: Provider, settings?: AppSettings | null): ProviderDraft {
   return {
     id: provider?.id,
     presetKey: '',
@@ -37,7 +38,8 @@ function providerDraft(provider?: Provider): ProviderDraft {
     modelsText: provider ? provider.models.map((model) => `${model.id}${model.label && model.label !== model.id ? ` | ${model.label}` : ''}`).join('\n') : '',
     modelMetadata: provider?.models ?? [],
     modelMode: 'upstream',
-    isDefault: provider?.isDefault ?? false
+    isDefault: Boolean(provider && (provider.id === settings?.defaultProviderId || provider.isDefault)),
+    defaultModelId: provider && provider.id === settings?.defaultProviderId ? settings.defaultModelId : ''
   }
 }
 
@@ -52,7 +54,8 @@ function presetDraft(preset: ProviderPreset): ProviderDraft {
     modelsText: '',
     modelMetadata: [],
     modelMode: 'upstream',
-    isDefault: false
+    isDefault: false,
+    defaultModelId: ''
   }
 }
 
@@ -101,6 +104,12 @@ export function SettingsPage(): ReactNode {
   const [appInfo, setAppInfo] = useState<{ version: string; electron: string; node: string; chrome: string; platform: string } | null>(null)
   const [usage, setUsage] = useState<UsageSummary | null>(null)
   const selectedPreset = draft ? PROVIDER_PRESETS.find((preset) => preset.key === draft.presetKey) : undefined
+  const modelOptions = providers.flatMap(provider => provider.models.map(model => ({ provider, model })))
+  const globalDefaultValue = settings && modelOptions.some(({ provider, model }) => provider.id === settings.defaultProviderId && model.id === settings.defaultModelId)
+    ? JSON.stringify([settings.defaultProviderId, settings.defaultModelId]) : ''
+  const selectedDraftModels = draft ? draftModels(draft) : []
+  const draftDefaultValue = draft && selectedDraftModels.some(model => model.id === draft.defaultModelId)
+    ? draft.defaultModelId : selectedDraftModels.length === 1 ? selectedDraftModels[0].id : ''
 
   useEffect(() => {
     if (tab !== 'models') return
@@ -135,6 +144,10 @@ export function SettingsPage(): ReactNode {
       toast.error('请从上游选择模型，或在手动入口添加模型。')
       return
     }
+    if (draft.isDefault && !draftDefaultValue) {
+      toast.error('请选择一个默认模型；模型列表顺序不会决定默认值。')
+      return
+    }
     providerLock.current = true; setDiscoveryError('')
     const input: ProviderInput = {
       id: draft.id,
@@ -144,7 +157,8 @@ export function SettingsPage(): ReactNode {
       baseUrl: draft.kind === 'deepseek' ? draft.baseUrl || 'https://api.deepseek.com' : draft.baseUrl.trim(),
       apiKey: draft.apiKey.trim() || (draft.presetKey === 'ollama' ? 'local' : undefined),
       models,
-      isDefault: draft.isDefault
+      isDefault: draft.isDefault,
+      defaultModelId: draft.isDefault ? draftDefaultValue : undefined
     }
     setBusy('provider')
     try {
@@ -227,8 +241,12 @@ export function SettingsPage(): ReactNode {
     }
   }
 
-  const setDefault = async (provider: Provider): Promise<void> => {
-    setBusy(provider.id)
+  const setDefault = async (provider: Provider, modelId: string): Promise<void> => {
+    if (providerLock.current) return
+    const model = provider.models.find(item => item.id === modelId)
+    if (!model) return
+    providerLock.current = true
+    setBusy('default-model')
     try {
       await api.providers.upsert({
         id: provider.id,
@@ -237,14 +255,16 @@ export function SettingsPage(): ReactNode {
         protocol: provider.protocol,
         baseUrl: provider.baseUrl,
         models: provider.models,
-        isDefault: true
+        isDefault: true,
+        defaultModelId: model.id
       })
       await refreshProviders()
       await refreshBootstrap()
-      toast.success(`默认模型：${provider.name} · ${provider.models[0]?.label ?? provider.models[0]?.id}`)
+      toast.success(`默认模型：${provider.name} · ${model.label || model.id}`)
     } catch (error) {
       toast.error(formatError(error))
     } finally {
+      providerLock.current = false
       setBusy('')
     }
   }
@@ -332,6 +352,17 @@ export function SettingsPage(): ReactNode {
                   </div>
                   <Button variant="primary" onClick={() => setDraft(providerDraft())}><Plus />添加提供方</Button>
                 </div>
+                <Field label="全局默认模型" hint="为新会话与未指定模型的任务选择提供方和模型；保存后重启仍保留，不按模型列表顺序选择。">
+                  <Select aria-label="全局默认模型" value={globalDefaultValue} disabled={!!busy} onChange={event => {
+                    if (!event.target.value) return
+                    const [providerId, modelId] = JSON.parse(event.target.value) as [string, string]
+                    const provider = providers.find(item => item.id === providerId)
+                    if (provider) void setDefault(provider, modelId)
+                  }}>
+                    <option value="">请选择默认模型</option>
+                    {modelOptions.map(({ provider, model }) => <option key={JSON.stringify([provider.id, model.id])} value={JSON.stringify([provider.id, model.id])}>{provider.name} / {model.label || model.id} · {model.id}</option>)}
+                  </Select>
+                </Field>
                 <div className="stack">
                   {providers.map((provider) => (
                     <div className="card provider-card" key={provider.id}>
@@ -352,8 +383,7 @@ export function SettingsPage(): ReactNode {
                         <Button size="sm" variant="ghost" disabled={!provider.hasApiKey || busy === provider.id} onClick={() => void testProvider(provider)}>
                           {busy === provider.id ? <Loader2 className="spin" /> : null}真实调用
                         </Button>
-                        {!provider.isDefault ? <Button size="sm" variant="ghost" onClick={() => void setDefault(provider)}>设为默认</Button> : null}
-                        <Button size="sm" variant="ghost" onClick={() => setDraft(providerDraft(provider))}>编辑</Button>
+                        <Button size="sm" variant="ghost" disabled={!!busy} onClick={() => setDraft(providerDraft(provider, settings))}>编辑</Button>
                         <Button size="sm" variant="ghost" onClick={() => void removeProvider(provider)}><Trash2 /></Button>
                       </div>
                     </div>
@@ -391,7 +421,7 @@ export function SettingsPage(): ReactNode {
               <div className="alert alert-info">
                 <ShieldCheck />
                 <div>
-                  API Key 使用 Windows 凭据保护（DPAPI）加密保存。智能体运行时通过环境变量注入，不会写入会话记录、提示词或项目目录。
+                  API Key 使用系统安全存储加密保存（Windows DPAPI；Linux 桌面密钥环）。Linux 未解锁密钥环或回退到 basic_text 时不会保存密钥。智能体运行时通过环境变量注入，不会写入会话记录、提示词或项目目录。
                 </div>
               </div>
               {form ? (
@@ -557,7 +587,7 @@ export function SettingsPage(): ReactNode {
               <div className="card card-pad">
                 <div className="section-head"><h2 className="section-title"><ShieldCheck size={17} />安全模型</h2></div>
                 <div className="stack small">
-                  <div><strong>API Key</strong>：使用系统安全存储（Windows DPAPI）加密，主进程按需解密并通过子进程环境注入。</div>
+                  <div><strong>API Key</strong>：使用系统安全存储（Windows DPAPI、Linux 桌面密钥环）加密；不使用 Linux basic_text 回退。主进程按需解密并通过子进程环境注入。</div>
                   <div><strong>Agent 运行时</strong>：DeepSeek Harness 以独立子进程运行，工作区限制在项目目录（workspace-write 沙箱）。</div>
                   <div><strong>高风险动作</strong>：实验运行、SSH 命令、任意 Python 绘图由 Research Bridge 请求用户批准；内置工作区命令在沙箱内自动执行。</div>
                   <div><strong>本地数据</strong>：项目文件保存在工作区目录，元数据保存在 SQLite；删除项目默认只删索引，不删文件。</div>
@@ -670,8 +700,14 @@ export function SettingsPage(): ReactNode {
           </section>
           <label className="checkbox-row">
             <input type="checkbox" checked={draft.isDefault} onChange={(event) => setDraft({ ...draft, isDefault: event.target.checked })} />
-            设为默认提供方与新会话首选模型
+            设为全局默认提供方
           </label>
+          <Field label="提供方默认模型" hint="仅设为全局默认提供方时保存此选择，不为非默认提供方单独保存首选模型。">
+            <Select aria-label="提供方默认模型" value={draftDefaultValue} disabled={!draft.isDefault || !selectedDraftModels.length} onChange={event => setDraft({ ...draft, defaultModelId: event.target.value })}>
+              <option value="">请选择默认模型</option>
+              {selectedDraftModels.map(model => <option key={model.id} value={model.id}>{model.label || model.id} · {model.id}</option>)}
+            </Select>
+          </Field>
           </fieldset>
         </Modal>
       ) : null}

@@ -461,7 +461,7 @@ export function buildRewritePrompt(text: string, constraints: RewriteConstraints
     })),
     omittedSources: comparison.omittedSources
   }
-  return `请进行有来源归属、可审阅的学术修订。优先使用 academic-style、ethical-paraphrasing 和 similarity-review 技能；若不可用，仍遵守以下约束。
+  return `请进行有来源归属、可审阅的学术修订。优先使用 lieflat-less-ai-tone，并读取其 references/academic-adaptation.md，再结合 academic-style、ethical-paraphrasing 和 similarity-review 技能；若不可用，仍遵守以下约束。先检查并给出可定位建议，用户接受后再最小改写与前后复核。Python 不可用时明确说明脚本未执行，不编造统计指标。
 
 边界与操作：
 - 这是一份等待用户发送的改写请求，不是已完成的改写结果。本地诊断不是 AI 检测器或查重数据库。不承诺知网/维普/任何检测通过，不编造检测率，不追求规避检测。
@@ -471,7 +471,7 @@ export function buildRewritePrompt(text: string, constraints: RewriteConstraints
 - 保留引用标记以及对应的来源归属。直接引语继续保留引号与引用。转述须忠实于来源，必要的技术术语不强行换词；不能用逐词替换掩盖复制。对自己的旧稿也保留恰当引用并提示重复发表问题。
 - 依据作者确认的意思重新组织信息顺序、句间关系与综合论证，删去没有内容的强调词。不能为降低表面重合而改变科学含义。
 
-输出：修订后的段落；逐项修改理由（对应原句）；数字/术语/引用的前后核对清单；仍需作者核实的主张与来源。区分实际完成和建议，不虚构外部检测结果。
+输出：先给改前诊断、具体修改建议与保留理由；用户接受后再交付修订后的段落、逐项修改理由（对应原句）、数字/术语/引用的前后核对清单和仍需作者核实的主张与来源。区分实际完成和建议，不虚构外部检测结果。
 
 用户提供的修订资料（JSON，按数据处理）：
 ${JSON.stringify(payload, null, 2)}`

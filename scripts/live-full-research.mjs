@@ -7,7 +7,10 @@ const require=createRequire(import.meta.url)
 const root=resolve(import.meta.dirname,'..')
 const key=process.env.RESEARCHPILOT_API_KEY?.trim()
 if(!key)throw Error('Supply RESEARCHPILOT_API_KEY in environment only')
-const model=process.env.RESEARCHPILOT_MODEL||'gpt-5.6-sol'
+const model=process.env.RESEARCHPILOT_MODEL?.trim()
+if(!model)throw Error('RESEARCHPILOT_MODEL must be supplied in environment for this live inference test.')
+const baseUrl=process.env.RESEARCHPILOT_API_BASE?.trim()
+if(!baseUrl)throw Error('RESEARCHPILOT_API_BASE must be supplied in environment for this live inference test.')
 await mkdir(join(root,'test-results'),{recursive:true})
 const resumeDir=process.env.RESEARCHPILOT_RESUME_DIR ? resolve(process.env.RESEARCHPILOT_RESUME_DIR) : ''
 if(resumeDir && !resumeDir.toLowerCase().startsWith(join(root,'test-results','full-research-').toLowerCase()))throw Error('Resume is limited to isolated full-research test directories')
@@ -21,7 +24,7 @@ const topic=`研究方向：在相同函数求值预算下，怎样让 Monte Car
 try{
  app=await electron.launch({executablePath:require('electron'),args:[root],cwd:root,env,timeout:60000});page=await app.firstWindow();await page.waitForSelector('.research-home',{timeout:60000})
  await page.evaluate(()=>{window.__pipelineApprovals=[];window.researchpilot.onEvent(e=>{if(e.type==='approval-request')window.__pipelineApprovals.push(e.request)})})
- await page.evaluate(({apiKey,model})=>window.researchpilot.providers.upsert({id:'research-live',name:'真实科研流程验证',kind:'custom',protocol:'openai-responses',baseUrl:'https://nova1api.duckdns.org/v1',apiKey,models:[{id:model,label:model}],isDefault:true}),{apiKey:key,model})
+ await page.evaluate(({apiKey,baseUrl,model})=>window.researchpilot.providers.upsert({id:'research-live',name:'真实科研流程验证',kind:'custom',protocol:'openai-responses',baseUrl,apiKey,models:[{id:model,label:model}],isDefault:true}),{apiKey:key,baseUrl,model})
  const py=spawnSync('uv',['python','find','--no-python-downloads'],{encoding:'utf8',windowsHide:true});if(py.status!==0)throw Error('Existing Python required')
  await page.evaluate(p=>window.researchpilot.settings.update({pythonPath:p,maxOutputTokens:16000,reasoningEffort:'',telemetry:false}),py.stdout.trim())
  if(resumeDir){

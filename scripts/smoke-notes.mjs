@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { _electron as electron } from 'playwright-core'
+import { navigateWorkspace } from './workspace-navigation.mjs'
 const require=createRequire(import.meta.url)
 const root=resolve(import.meta.dirname,'..')
 await mkdir(join(root,'test-results'),{recursive:true})
@@ -18,8 +19,8 @@ try{
  const a=await page.evaluate(p=>window.researchpilot.notes.create({projectId:p,title:'研究问题 A',body:'# 研究问题\n\n保留原始假设，不预设结论。'}),projectId)
  const b=await page.evaluate(p=>window.researchpilot.notes.create({projectId:p,title:'阅读摘记 B',body:'这是一条用于测试的阅读记录，不代表真实文献。'}),projectId)
  await page.evaluate(({projectId,id,revision,body})=>window.researchpilot.notes.update({projectId,id,expectedRevision:revision,title:'研究问题 A',body}),{projectId,id:a.id,revision:a.revision,body:`# 研究问题\n\n关联来源：[阅读摘记 B](research-note:${b.id})\n\n不要加载外部图片：![tracking](https://invalid.example/tracker.png)`})
- await page.locator('.sidebar a[href="#/notes"]').click()
- await page.evaluate(id=>{window.location.hash=`/notes/${id}`},a.id)
+ await navigateWorkspace(page, '/notes')
+ await page.locator(`[data-testid="notes-row"][data-note-id="${a.id}"]`).click()
  await page.locator(`[data-testid="note-editor"][data-note-id="${a.id}"]`).waitFor()
  await page.waitForFunction(()=>document.querySelector('[data-testid="note-title"]')?.value==='研究问题 A')
  await page.getByTestId('note-title').fill('研究问题 A（修订）')
@@ -57,7 +58,7 @@ try{
  pass('Notes cannot be read through another project')
  await page.screenshot({path:join(dir,'notes-conflict.png')})
  await page.evaluate(id=>window.researchpilot.projects.setActive(id),projectId)
- await page.reload();await page.waitForSelector('.sidebar');await page.evaluate(id=>{window.location.hash=`/notes/${id}`},b.id)
+ await page.reload();await page.waitForSelector('.sidebar');await navigateWorkspace(page, '/notes');await page.locator(`[data-testid="notes-row"][data-note-id="${b.id}"]`).click()
  await page.locator(`[data-testid="note-editor"][data-note-id="${b.id}"]`).waitFor()
  await page.getByTestId('note-title').waitFor();await page.screenshot({path:join(dir,'notes-workspace.png')})
  await page.getByTestId('notes-new').click()

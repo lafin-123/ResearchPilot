@@ -8,6 +8,7 @@ import type { ChatMessage, ToolActivity } from '@shared/types'
 import { api, formatBytes, formatError } from '../lib/api'
 import { useAppStore } from '../store/app'
 import { IconButton, StatusBadge } from './Ui'
+import { ChatModelPicker } from './ChatModelPicker'
 
 function prettyJson(value: string): string {
   try {
@@ -112,6 +113,7 @@ export function ChatPanel({ variant = 'dock' }: { variant?: 'dock' | 'page' }): 
   const usage = useAppStore((state) => state.usage)
   const agentState = useAppStore((state) => state.agentState)
   const pendingSend = useAppStore((state) => state.pendingSend)
+  const modelChanging = useAppStore((state) => state.modelChanging)
   const projectLoading = useAppStore((state) => state.projectLoading)
   const activeProjectId = useAppStore((state) => state.activeProjectId)
   const goToRunningChat = useAppStore((state) => state.goToRunningChat)
@@ -128,7 +130,7 @@ export function ChatPanel({ variant = 'dock' }: { variant?: 'dock' | 'page' }): 
   const globallyRunning = agentState?.status === 'running' || agentState?.status === 'starting'
   const matchesChat = agentState?.projectId === activeProjectId && agentState?.chatId === activeChatId
   const running = globallyRunning && matchesChat
-  const busy = globallyRunning || Boolean(pendingSend) || projectLoading
+  const busy = globallyRunning || Boolean(pendingSend) || modelChanging || projectLoading
   const [dragging, setDragging] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -305,12 +307,13 @@ export function ChatPanel({ variant = 'dock' }: { variant?: 'dock' | 'page' }): 
             }}
           />
           <div className="composer-actions">
+            <ChatModelPicker />
             <button className="btn btn-ghost btn-sm composer-attach" title="添加附件" onClick={() => void pickAttachments()} disabled={running}>
               <Paperclip size={13} />
               <span>附件</span>
             </button>
             <span className="composer-hint">
-              {matchesChat && agentState?.status === 'error' ? '上次运行出错，可重新发送。' : '实验与远程命令需要你的确认。'}
+              {matchesChat && agentState?.status === 'error' ? '上次运行出错，可重新发送。' : '切换模型继续聊，历史保留。'}
             </span>
             <button className="btn btn-primary btn-sm" style={{ width: 30, height: 28, padding: 0 }} title="发送（Enter）" disabled={(!text.trim() && attachments.length === 0) || busy || !hasKey} onClick={() => void doSend()}>
               <ArrowUp size={15} />
@@ -329,16 +332,12 @@ export function AssistantDock(): ReactNode {
   const selectChat = useAppStore((state) => state.selectChat)
   const newChat = useAppStore((state) => state.newChat)
   const agentState = useAppStore((state) => state.agentState)
-  const providers = useAppStore((state) => state.providers)
-  const modelSelection = useAppStore((state) => state.modelSelection)
-  const setChatModel = useAppStore((state) => state.setChatModel)
   const setAssistantOpen = useAppStore((state) => state.setAssistantOpen)
   const activeProjectId = useAppStore((state) => state.activeProjectId)
   const pendingSend = useAppStore((state) => state.pendingSend)
   const running = agentState?.status === 'running' || agentState?.status === 'starting'
   const matchesChat = agentState?.projectId === activeProjectId && agentState?.chatId === activeChatId
 
-  const currentValue = modelSelection.providerId && modelSelection.modelId ? `${modelSelection.providerId}::${modelSelection.modelId}` : ''
 
   return (
     <aside className="assistant-dock">
@@ -369,38 +368,10 @@ export function AssistantDock(): ReactNode {
             <Bot />
           </IconButton>
         </div>
-        <div className="assistant-controls">
-          <select
-            className="model-select"
-            value={currentValue}
-            disabled={running || Boolean(pendingSend)}
-            onChange={(event) => {
-              const [providerId, modelId] = event.target.value.split('::')
-              if (providerId && modelId) void setChatModel(providerId, modelId)
-            }}
-            title="模型"
-          >
-            {currentValue && !optionsVisible(providers, currentValue) ? <option value={currentValue}>当前模型</option> : null}
-            {providers.map((provider) => (
-              <optgroup key={provider.id} label={provider.hasApiKey ? provider.name : `${provider.name}（未配置 Key）`}>
-                {provider.models.map((model) => (
-                  <option key={`${provider.id}::${model.id}`} value={`${provider.id}::${model.id}`}>
-                    {model.label || model.id}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/settings')}>模型设置</button>
-        </div>
       </div>
       <ChatPanel variant="dock" />
     </aside>
   )
-}
-
-function optionsVisible(providers: ReturnType<typeof useAppStore.getState>['providers'], value: string): boolean {
-  return providers.some((provider) => provider.models.some((model) => `${provider.id}::${model.id}` === value))
 }
 
 export function AgentPage(): ReactNode {

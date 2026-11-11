@@ -3,7 +3,11 @@ import { resolve, join } from 'node:path'
 
 const key = process.env.RESEARCHPILOT_API_KEY?.trim()
 if (!key) throw new Error('Set RESEARCHPILOT_API_KEY in the process environment; never put credentials in this script.')
-const origin = new URL(process.env.RESEARCHPILOT_API_ORIGIN || 'https://nova1api.duckdns.org')
+const apiOrigin = process.env.RESEARCHPILOT_API_ORIGIN?.trim()
+if (!apiOrigin) throw new Error('RESEARCHPILOT_API_ORIGIN must be supplied in environment for this gateway probe.')
+const selected = process.env.RESEARCHPILOT_MODEL?.trim()
+if (!selected) throw new Error('RESEARCHPILOT_MODEL must be supplied in environment for this gateway probe.')
+const origin = new URL(apiOrigin)
 if (origin.protocol !== 'https:' || origin.username || origin.password) throw new Error('An HTTPS origin without URL credentials is required.')
 const dir = resolve('test-results')
 await mkdir(dir, { recursive: true })
@@ -21,8 +25,6 @@ try {
   if (!models.length) throw new Error('No models were returned by the gateway')
   report.models = models
   console.log('MODEL_IDS', JSON.stringify(models))
-  const requested = process.env.RESEARCHPILOT_MODEL
-  const selected = requested || models.find((id) => /gpt-5\.4-mini/i.test(id)) || models.find((id) => /gpt-5-mini/i.test(id)) || models.find((id) => /gpt-4\.1-mini/i.test(id)) || models.find((id) => /deepseek.*(chat|flash)/i.test(id)) || models.find((id) => /sonnet/i.test(id)) || models.find((id) => /gpt-5/i.test(id)) || models[0]
   if (!models.includes(selected)) throw new Error('Requested model is not listed by this gateway')
   report.selectedModel = selected
   const begin = Date.now()

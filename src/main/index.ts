@@ -31,6 +31,15 @@ import { NoteService } from './services/notes'
 import { PdfAnnotationService } from './services/pdf-annotations'
 import { BackupService } from './services/backups'
 import { ProjectHealthService } from './services/project-health'
+import { ResearchWorkspaceService } from './services/research-workspaces'
+import { ResearchCoordinator } from './services/research-coordinator'
+import { ResearchMethodService } from './services/research-methods'
+import { WritingToneService } from './services/writing-tone'
+import { bundledResource } from './lib/paths'
+import { generateResearchJson } from './lib/model-generation'
+import { requestViaSystemProxy } from './lib/network'
+import { resolveAgentRole } from '../shared/agent-roles'
+import { PaperContextService } from './services/paper-context'
 
 let mainWindow: BrowserWindowType | null = null
 let db: Db | null = null
@@ -138,14 +147,32 @@ async function activateWorkspace(scope: LocalWorkspaceScope): Promise<void> {
     const approvals = new ApprovalService()
     const bridge = new BridgeService(projects, documents, references, experiments, runner, figures, ssh, approvals, settings, evidence, () => localSession?.isAuthorized() ?? false, projectHealth)
     const mcp = new McpService(db, projects, bridge)
-    const agent = new AgentService(chats, providers, settings, projects, usage, mcp, knowledge)
+    const paperContext = new PaperContextService(db, documents, references, experiments, notes, figures, id => projectHealth.assertAvailable(id))
+    const agent = new AgentService(chats, providers, settings, projects, usage, mcp, knowledge, paperContext)
     const pipeline = new PipelineService(db, agent, chats, documents, projects, references, settings)
     const skills = new SkillService(db)
+    const writingTone = new WritingToneService({
+      resource: (...parts) => bundledResource('skills', 'lieflat-less-ai-tone', ...parts),
+      python: () => settings.get().pythonPath,
+      assertProject: id => projectHealth.assertAvailable(id),
+      generate: async (prompt, signal) => {
+        const cfg = settings.get()
+        const route = resolveAgentRole('writing', cfg.agentRoleModels, providers.list()) ?? { providerId: cfg.defaultProviderId, modelId: cfg.defaultModelId }
+        const provider = providers.get(route.providerId)
+        const output = await generateResearchJson(provider, providers.apiKey(provider.id), route.modelId, prompt, requestViaSystemProxy, signal)
+        return { output, providerId: provider.id, modelId: route.modelId }
+      }
+    })
+    const researchPages = new ResearchWorkspaceService(db)
+    let research: ResearchCoordinator
+    const methods = new ResearchMethodService(researchPages,projects,experiments,settings,approvals,projectHealth,()=>agent.isRunning()||runner.runningCount()>0||pipeline.isRunning()||!!research?.isRunning())
+    research = new ResearchCoordinator(researchPages,providers,settings,references,documents,projectHealth,approvals,()=>agent.isRunning()||runner.runningCount()>0||pipeline.isRunning()||methods.isRunning())
+    bridge.setResearchServices(researchPages,methods,()=>research.isRunning()||methods.isRunning())
     const backups = new BackupService(db, { workspaceRoot: () => settings.get().workspaceRoot, assertIdle: () => {
-      if (agent.isRunning() || runner.runningCount() || pipeline.isRunning() || bridge.isBusy()) throw new Error('请等待或停止当前研究任务后再进行备份恢复。')
+      if (research.isRunning() || methods.isRunning() || agent.isRunning() || runner.runningCount() || pipeline.isRunning() || bridge.isBusy()) throw new Error('请等待或停止当前研究任务后再进行备份恢复。')
     } })
 
-    const current: Services = { settings, providers, projects, documents, references, experiments, runner, figures, chats, agent, ssh, approvals, bridge, pipeline, skills, usage, evidence, mcp, knowledge, notes, pdfAnnotations, backups, projectHealth }
+    const current: Services = { paperContext, writingTone, researchPages, research, methods, settings, providers, projects, documents, references, experiments, runner, figures, chats, agent, ssh, approvals, bridge, pipeline, skills, usage, evidence, mcp, knowledge, notes, pdfAnnotations, backups, projectHealth }
     services = current
     projectHealth.initializeAll()
     if (!settings.getActiveProjectId()) {
@@ -167,6 +194,9 @@ async function deactivateWorkspace(): Promise<void> {
   services = null
   try {
     if (current) {
+      current.writingTone.close()
+      current.research.close()
+      current.methods.close()
       current.backups.dispose()
       current.approvals.cancelAll()
       current.runner.shutdown()
@@ -254,6 +284,9 @@ if (!hasLock) {
     event.preventDefault()
     quitting = true
     localSession?.revoke()
+    services?.writingTone.close()
+    services?.research.close()
+    services?.methods.close()
     services?.approvals.cancelAll()
     services?.runner.shutdown()
     // Cancel long-running work before waiting for IPC leases, so pending approval/chat calls can settle.
